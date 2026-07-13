@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-containment-600/60;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-containment-900 text-alloy-100 font-sans antialiased;
+    background-image:
+      radial-gradient(circle at 15% 0%, rgba(94,200,232,0.08), transparent 45%),
+      radial-gradient(circle at 85% 20%, rgba(242,179,61,0.06), transparent 40%);
+  }
+  ::selection {
+    @apply bg-cherenkov-500/40 text-white;
+  }
+  :focus-visible {
+    outline: 2px solid #5EC8E8;
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  .eyebrow {
+    @apply font-mono text-xs tracking-[0.25em] uppercase text-cherenkov-400;
+  }
+  .container-page {
+    @apply max-w-7xl mx-auto px-5 sm:px-8 lg:px-10;
+  }
+  .btn-primary {
+    @apply inline-flex items-center gap-2 rounded-sm bg-cherenkov-400 text-containment-950 font-semibold px-6 py-3 text-sm tracking-wide transition-all hover:bg-cherenkov-300 hover:shadow-glow active:scale-[0.98];
+  }
+  .btn-secondary {
+    @apply inline-flex items-center gap-2 rounded-sm border border-alloy-500/50 text-alloy-100 font-semibold px-6 py-3 text-sm tracking-wide transition-all hover:border-cherenkov-400 hover:text-cherenkov-300 active:scale-[0.98];
+  }
+  .btn-amber {
+    @apply inline-flex items-center gap-2 rounded-sm bg-uranium-400 text-containment-950 font-semibold px-6 py-3 text-sm tracking-wide transition-all hover:bg-uranium-300 hover:shadow-glow-amber active:scale-[0.98];
+  }
+  .panel {
+    @apply bg-containment-800/70 border border-containment-600 rounded-sm backdrop-blur-sm;
+  }
+  .corner-frame {
+    position: relative;
+  }
+  .corner-frame::before,
+  .corner-frame::after {
+    content: '';
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-color: #5EC8E8;
+    opacity: 0.7;
+  }
+  .corner-frame::before {
+    top: -1px; left: -1px;
+    border-top: 2px solid; border-left: 2px solid;
+  }
+  .corner-frame::after {
+    bottom: -1px; right: -1px;
+    border-bottom: 2px solid; border-right: 2px solid;
+  }
+  .data-label {
+    @apply font-mono text-[11px] uppercase tracking-wider text-alloy-400;
+  }
+  .hex-bg {
+    background-image: theme('backgroundImage.hex-grid');
+    background-size: 56px 100px;
+  }
+  .divider-dashed {
+    @apply border-t border-dashed border-containment-500;
+  }
+}
