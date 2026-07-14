@@ -179,22 +179,28 @@ export default function Home() {
             <motion.article
               key={n.id}
               initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.45, delay: i * 0.08 }}
-              className="overflow-hidden panel group"
+              whileHover={{ y: -4 }}
+              className="overflow-hidden transition-shadow panel group hover:shadow-glow"
             >
-              <div className="aspect-[16/10] overflow-hidden">
-                <img src={n.cover} alt="" className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105" />
-              </div>
-              <div className="p-5">
-                <div className="flex items-center gap-3 mb-3">
-                  <span className="text-[10px] font-mono uppercase tracking-wider text-uranium-400 border border-uranium-500/30 px-2 py-0.5">{n.tag}</span>
-                  <span className="flex items-center gap-1 text-xs text-alloy-500">
-                    <Calendar size={12} />
-                    {new Date(n.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+              <Link to={`/news/${n.id}`} className="block">
+                <div className="aspect-[16/10] overflow-hidden">
+                  <img src={n.cover} alt="" className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105" />
+                </div>
+                <div className="p-5">
+                  <div className="flex items-center gap-3 mb-3">
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-uranium-400 border border-uranium-500/30 px-2 py-0.5">{n.tag}</span>
+                    <span className="flex items-center gap-1 text-xs text-alloy-500">
+                      <Calendar size={12} />
+                      {new Date(n.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+                    </span>
+                  </div>
+                  <h3 className="mb-2 font-semibold leading-snug transition-colors text-alloy-100 group-hover:text-cherenkov-300">{n.title}</h3>
+                  <p className="text-sm leading-relaxed text-alloy-400 line-clamp-3">{n.excerpt}</p>
+                  <span className="inline-flex items-center gap-1 mt-4 text-xs font-medium transition-opacity opacity-0 text-cherenkov-300 group-hover:opacity-100">
+                    Read article <ChevronRight size={14} />
                   </span>
                 </div>
-                <h3 className="mb-2 font-semibold leading-snug text-alloy-100">{n.title}</h3>
-                <p className="text-sm leading-relaxed text-alloy-400 line-clamp-3">{n.excerpt}</p>
-              </div>
+              </Link>
             </motion.article>
           ))}
         </div>
@@ -223,14 +229,14 @@ export default function Home() {
         >
           {gallery.map((g) => (
             <SwiperSlide key={g.id}>
-              <div className="relative aspect-[4/5] overflow-hidden panel">
-                <img src={g.url} alt={g.title} className="object-cover w-full h-full" />
+              <Link to="/gallery" className="relative block aspect-[4/5] overflow-hidden panel group">
+                <img src={g.url} alt={g.title} className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110" />
                 <div className="absolute inset-0 bg-gradient-to-t from-containment-950/90 via-transparent to-transparent" />
                 <div className="absolute bottom-4 left-4 right-4">
                   <p className="font-mono text-xs tracking-wider uppercase text-cherenkov-300">{g.album}</p>
                   <p className="mt-1 text-sm text-alloy-100">{g.title}</p>
                 </div>
-              </div>
+              </Link>
             </SwiperSlide>
           ))}
         </Swiper>
