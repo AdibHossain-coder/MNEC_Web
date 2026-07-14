@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
   ArrowRight, Atom, Brain, ShieldAlert, FlaskConical, MapPin, Users,
-  Calendar, ChevronRight,
+  Calendar, ChevronRight, ChevronDown,
 } from 'lucide-react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Autoplay } from 'swiper/modules'
@@ -34,8 +34,15 @@ export default function Home() {
 
         <div className="relative grid items-center gap-12 py-20 container-page lg:grid-cols-2 lg:py-28">
           <motion.div initial="hidden" animate="show" variants={fadeUp} custom={0}>
+            <div className="inline-flex items-center gap-2 px-3 py-1 mb-6 border rounded-full border-containment-600">
+              <span className="relative flex w-2 h-2">
+                <span className="absolute inline-flex w-full h-full rounded-full opacity-75 animate-ping bg-cherenkov-400" />
+                <span className="relative inline-flex w-2 h-2 rounded-full bg-cherenkov-400" />
+              </span>
+              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-alloy-300">Reactor Status: Nominal</span>
+            </div>
             <p className="mb-5 eyebrow">{clubInfo.institution} · Dept. of Nuclear Science &amp; Engineering</p>
-            <h1 className="font-display text-5xl sm:text-6xl xl:text-7xl font-bold leading-[0.95] text-alloy-100 tracking-tight">
+            <h1 className="font-display text-4xl sm:text-6xl xl:text-7xl font-bold leading-[0.95] text-alloy-100 tracking-tight">
               Critical mass,<br />
               <span className="text-cherenkov-400">not critical mess.</span>
             </h1>
@@ -66,7 +73,7 @@ export default function Home() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="relative flex items-center justify-center"
+            className="relative flex items-center justify-center p-6 corner-frame"
           >
             <ReactorCore className="w-full max-w-md aspect-square animate-drift" />
             <div className="absolute bottom-2 right-2 font-mono text-[10px] text-alloy-500 tracking-wider">
@@ -74,10 +81,19 @@ export default function Home() {
             </div>
           </motion.div>
         </div>
+
+        <a
+          href="#identity"
+          className="absolute flex-col items-center hidden gap-1 transition-colors -translate-x-1/2 sm:flex bottom-6 left-1/2 text-alloy-500 hover:text-cherenkov-300"
+          aria-label="Scroll to next section"
+        >
+          <span className="font-mono text-[10px] uppercase tracking-[0.2em]">Scroll</span>
+          <ChevronDown size={16} className="animate-bounce" />
+        </a>
       </section>
 
       {/* ---------------- IDENTITY ---------------- */}
-      <section className="py-20 container-page sm:py-28">
+      <section id="identity" className="py-20 container-page sm:py-28">
         <div className="grid lg:grid-cols-2 gap-14">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
             <p className="mb-3 eyebrow">Our Identity</p>
