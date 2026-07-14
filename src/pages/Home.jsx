@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
   ArrowRight, Atom, Brain, ShieldAlert, FlaskConical, MapPin, Users,
-  Calendar, ChevronRight, ChevronDown,
+  Calendar, ChevronRight, ChevronDown, Target, Clock,
 } from 'lucide-react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Autoplay } from 'swiper/modules'
@@ -100,21 +100,23 @@ export default function Home() {
             <h2 className="mb-5 text-3xl font-bold font-display sm:text-4xl text-alloy-100">
               More than a study group.
             </h2>
-            <p className="leading-relaxed text-alloy-400">{clubInfo.history}</p>
+            <p className="pl-5 leading-relaxed border-l-2 text-alloy-400 border-cherenkov-500/40">{clubInfo.history}</p>
           </motion.div>
 
           <div className="grid gap-5 sm:grid-cols-2">
             <motion.div
               initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}
-              className="p-6 corner-frame panel"
+              className="p-6 transition-all corner-frame panel hover:-translate-y-1 hover:shadow-glow"
             >
+              <Target className="mb-3 text-cherenkov-400" size={20} strokeWidth={1.5} />
               <span className="data-label text-cherenkov-400">§ 01 — Mission</span>
               <p className="mt-3 text-sm leading-relaxed text-alloy-300">{clubInfo.mission}</p>
             </motion.div>
             <motion.div
               initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.1 }}
-              className="p-6 corner-frame panel"
+              className="p-6 transition-all corner-frame panel hover:-translate-y-1 hover:shadow-glow-amber"
             >
+              <Clock className="mb-3 text-uranium-400" size={20} strokeWidth={1.5} />
               <span className="data-label text-uranium-400">§ 02 — Founded {clubInfo.founded}</span>
               <p className="mt-3 text-sm leading-relaxed text-alloy-300">
                 Nearly a decade of running the department's technical culture — from first-year
@@ -140,9 +142,12 @@ export default function Home() {
                 <motion.div
                   key={a.id}
                   initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.45, delay: i * 0.06 }}
-                  className="p-6 transition-colors panel hover:border-cherenkov-500/50 group"
+                  className="p-6 transition-all panel hover:border-cherenkov-500/50 hover:-translate-y-1 hover:shadow-glow group"
                 >
-                  <Icon className="mb-4 transition-transform text-cherenkov-400 group-hover:scale-110" size={26} strokeWidth={1.5} />
+                  <div className="flex items-start justify-between mb-4">
+                    <Icon className="transition-transform text-cherenkov-400 group-hover:scale-110" size={26} strokeWidth={1.5} />
+                    <span className="font-mono text-[10px] text-alloy-500">{String(i + 1).padStart(2, '0')}</span>
+                  </div>
                   <h3 className="mb-2 font-semibold text-alloy-100">{a.title}</h3>
                   <p className="text-sm leading-relaxed text-alloy-400">{a.description}</p>
                 </motion.div>
