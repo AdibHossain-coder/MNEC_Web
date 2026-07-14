@@ -9,9 +9,8 @@ import { Autoplay } from 'swiper/modules'
 import 'swiper/css'
 
 import ReactorCore from '../components/ReactorCore.jsx'
-import { clubInfo, activities, gallery } from '../data/dummyData.js'
+import { clubInfo, activities as dummyActivities, gallery as dummyGallery, news as dummyNews } from '../data/dummyData.js'
 import { useFirestoreCollection } from '../hooks/useFirestoreCollection.js'
-import { news as dummyNews } from '../data/dummyData.js'
 
 const iconMap = { Atom, Brain, ShieldAlert, FlaskConical, MapPin, Users }
 
@@ -22,27 +21,29 @@ const fadeUp = {
 
 export default function Home() {
   const { data: newsData } = useFirestoreCollection('news', dummyNews, 'date')
+  const { data: activities } = useFirestoreCollection('activities', dummyActivities)
+  const { data: gallery } = useFirestoreCollection('gallery', dummyGallery)
   const featuredNews = newsData.slice(0, 3)
 
   return (
     <div>
       {/* ---------------- HERO ---------------- */}
       <section className="relative overflow-hidden border-b border-containment-600">
-        <div className="absolute inset-0 hex-bg bg-repeat opacity-60" />
+        <div className="absolute inset-0 bg-repeat hex-bg opacity-60" />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-containment-900/60 to-containment-900" />
 
-        <div className="container-page relative grid lg:grid-cols-2 gap-12 items-center py-20 lg:py-28">
+        <div className="relative grid items-center gap-12 py-20 container-page lg:grid-cols-2 lg:py-28">
           <motion.div initial="hidden" animate="show" variants={fadeUp} custom={0}>
-            <p className="eyebrow mb-5">{clubInfo.institution} · Dept. of Nuclear Science &amp; Engineering</p>
+            <p className="mb-5 eyebrow">{clubInfo.institution} · Dept. of Nuclear Science &amp; Engineering</p>
             <h1 className="font-display text-5xl sm:text-6xl xl:text-7xl font-bold leading-[0.95] text-alloy-100 tracking-tight">
               Critical mass,<br />
               <span className="text-cherenkov-400">not critical mess.</span>
             </h1>
-            <p className="mt-6 text-alloy-400 text-lg leading-relaxed max-w-lg">
+            <p className="max-w-lg mt-6 text-lg leading-relaxed text-alloy-400">
               {clubInfo.name} is where MIST's nuclear science students turn coursework into
               reactor models, quiz trophies, and a network that follows you past graduation.
             </p>
-            <div className="mt-9 flex flex-wrap gap-4">
+            <div className="flex flex-wrap gap-4 mt-9">
               <Link to="/activities" className="btn-primary">
                 Explore Activities <ArrowRight size={16} />
               </Link>
@@ -51,11 +52,11 @@ export default function Home() {
               </Link>
             </div>
 
-            <div className="mt-14 grid grid-cols-2 sm:grid-cols-4 gap-6 border-t border-containment-600 pt-8">
+            <div className="grid grid-cols-2 gap-6 pt-8 border-t mt-14 sm:grid-cols-4 border-containment-600">
               {clubInfo.stats.map((s, i) => (
                 <motion.div key={s.label} initial="hidden" animate="show" variants={fadeUp} custom={i + 1}>
-                  <div className="font-mono text-2xl sm:text-3xl font-semibold text-cherenkov-300">{s.value}</div>
-                  <div className="data-label mt-1">{s.label}</div>
+                  <div className="font-mono text-2xl font-semibold sm:text-3xl text-cherenkov-300">{s.value}</div>
+                  <div className="mt-1 data-label">{s.label}</div>
                 </motion.div>
               ))}
             </div>
@@ -76,30 +77,30 @@ export default function Home() {
       </section>
 
       {/* ---------------- IDENTITY ---------------- */}
-      <section className="container-page py-20 sm:py-28">
+      <section className="py-20 container-page sm:py-28">
         <div className="grid lg:grid-cols-2 gap-14">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
-            <p className="eyebrow mb-3">Our Identity</p>
-            <h2 className="font-display text-3xl sm:text-4xl font-bold text-alloy-100 mb-5">
+            <p className="mb-3 eyebrow">Our Identity</p>
+            <h2 className="mb-5 text-3xl font-bold font-display sm:text-4xl text-alloy-100">
               More than a study group.
             </h2>
-            <p className="text-alloy-400 leading-relaxed">{clubInfo.history}</p>
+            <p className="leading-relaxed text-alloy-400">{clubInfo.history}</p>
           </motion.div>
 
-          <div className="grid sm:grid-cols-2 gap-5">
+          <div className="grid gap-5 sm:grid-cols-2">
             <motion.div
               initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}
-              className="corner-frame panel p-6"
+              className="p-6 corner-frame panel"
             >
               <span className="data-label text-cherenkov-400">§ 01 — Mission</span>
-              <p className="mt-3 text-sm text-alloy-300 leading-relaxed">{clubInfo.mission}</p>
+              <p className="mt-3 text-sm leading-relaxed text-alloy-300">{clubInfo.mission}</p>
             </motion.div>
             <motion.div
               initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.1 }}
-              className="corner-frame panel p-6"
+              className="p-6 corner-frame panel"
             >
               <span className="data-label text-uranium-400">§ 02 — Founded {clubInfo.founded}</span>
-              <p className="mt-3 text-sm text-alloy-300 leading-relaxed">
+              <p className="mt-3 text-sm leading-relaxed text-alloy-300">
                 Nearly a decade of running the department's technical culture — from first-year
                 orientation to national competitions.
               </p>
@@ -110,30 +111,30 @@ export default function Home() {
 
       {/* ---------------- WHY JOIN ---------------- */}
       <section className="border-y border-containment-600 bg-containment-800/40">
-        <div className="container-page py-20 sm:py-28">
-          <p className="eyebrow mb-3">Why Join</p>
-          <h2 className="font-display text-3xl sm:text-4xl font-bold text-alloy-100 mb-12 max-w-xl">
+        <div className="py-20 container-page sm:py-28">
+          <p className="mb-3 eyebrow">Why Join</p>
+          <h2 className="max-w-xl mb-12 text-3xl font-bold font-display sm:text-4xl text-alloy-100">
             A structured environment for a genuinely technical hobby.
           </h2>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {activities.slice(0, 6).map((a, i) => {
               const Icon = iconMap[a.icon] || Atom
               return (
                 <motion.div
                   key={a.id}
                   initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.45, delay: i * 0.06 }}
-                  className="panel p-6 hover:border-cherenkov-500/50 transition-colors group"
+                  className="p-6 transition-colors panel hover:border-cherenkov-500/50 group"
                 >
-                  <Icon className="text-cherenkov-400 mb-4 group-hover:scale-110 transition-transform" size={26} strokeWidth={1.5} />
-                  <h3 className="font-semibold text-alloy-100 mb-2">{a.title}</h3>
-                  <p className="text-sm text-alloy-400 leading-relaxed">{a.description}</p>
+                  <Icon className="mb-4 transition-transform text-cherenkov-400 group-hover:scale-110" size={26} strokeWidth={1.5} />
+                  <h3 className="mb-2 font-semibold text-alloy-100">{a.title}</h3>
+                  <p className="text-sm leading-relaxed text-alloy-400">{a.description}</p>
                 </motion.div>
               )
             })}
           </div>
           <div className="mt-10">
-            <Link to="/activities" className="inline-flex items-center gap-1 text-cherenkov-300 text-sm font-medium hover:gap-2 transition-all">
+            <Link to="/activities" className="inline-flex items-center gap-1 text-sm font-medium transition-all text-cherenkov-300 hover:gap-2">
               See all activities <ChevronRight size={16} />
             </Link>
           </div>
@@ -141,26 +142,26 @@ export default function Home() {
       </section>
 
       {/* ---------------- LATEST NEWS ---------------- */}
-      <section className="container-page py-20 sm:py-28">
-        <div className="flex items-end justify-between mb-12 flex-wrap gap-4">
+      <section className="py-20 container-page sm:py-28">
+        <div className="flex flex-wrap items-end justify-between gap-4 mb-12">
           <div>
-            <p className="eyebrow mb-3">Bulletin</p>
-            <h2 className="font-display text-3xl sm:text-4xl font-bold text-alloy-100">Latest from the desk</h2>
+            <p className="mb-3 eyebrow">Bulletin</p>
+            <h2 className="text-3xl font-bold font-display sm:text-4xl text-alloy-100">Latest from the desk</h2>
           </div>
-          <Link to="/news" className="inline-flex items-center gap-1 text-cherenkov-300 text-sm font-medium hover:gap-2 transition-all">
+          <Link to="/news" className="inline-flex items-center gap-1 text-sm font-medium transition-all text-cherenkov-300 hover:gap-2">
             All news <ChevronRight size={16} />
           </Link>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid gap-6 md:grid-cols-3">
           {featuredNews.map((n, i) => (
             <motion.article
               key={n.id}
               initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.45, delay: i * 0.08 }}
-              className="panel overflow-hidden group"
+              className="overflow-hidden panel group"
             >
               <div className="aspect-[16/10] overflow-hidden">
-                <img src={n.cover} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                <img src={n.cover} alt="" className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105" />
               </div>
               <div className="p-5">
                 <div className="flex items-center gap-3 mb-3">
@@ -170,8 +171,8 @@ export default function Home() {
                     {new Date(n.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
                   </span>
                 </div>
-                <h3 className="font-semibold text-alloy-100 leading-snug mb-2">{n.title}</h3>
-                <p className="text-sm text-alloy-400 leading-relaxed line-clamp-3">{n.excerpt}</p>
+                <h3 className="mb-2 font-semibold leading-snug text-alloy-100">{n.title}</h3>
+                <p className="text-sm leading-relaxed text-alloy-400 line-clamp-3">{n.excerpt}</p>
               </div>
             </motion.article>
           ))}
@@ -179,13 +180,13 @@ export default function Home() {
       </section>
 
       {/* ---------------- GALLERY STRIP ---------------- */}
-      <section className="border-t border-containment-600 bg-containment-800/40 py-20 sm:py-24 overflow-hidden">
-        <div className="container-page mb-10 flex items-end justify-between flex-wrap gap-4">
+      <section className="py-20 overflow-hidden border-t border-containment-600 bg-containment-800/40 sm:py-24">
+        <div className="flex flex-wrap items-end justify-between gap-4 mb-10 container-page">
           <div>
-            <p className="eyebrow mb-3">Field Notes</p>
-            <h2 className="font-display text-3xl sm:text-4xl font-bold text-alloy-100">Moments from the lab floor</h2>
+            <p className="mb-3 eyebrow">Field Notes</p>
+            <h2 className="text-3xl font-bold font-display sm:text-4xl text-alloy-100">Moments from the lab floor</h2>
           </div>
-          <Link to="/gallery" className="inline-flex items-center gap-1 text-cherenkov-300 text-sm font-medium hover:gap-2 transition-all">
+          <Link to="/gallery" className="inline-flex items-center gap-1 text-sm font-medium transition-all text-cherenkov-300 hover:gap-2">
             Full gallery <ChevronRight size={16} />
           </Link>
         </div>
@@ -202,11 +203,11 @@ export default function Home() {
           {gallery.map((g) => (
             <SwiperSlide key={g.id}>
               <div className="relative aspect-[4/5] overflow-hidden panel">
-                <img src={g.url} alt={g.title} className="w-full h-full object-cover" />
+                <img src={g.url} alt={g.title} className="object-cover w-full h-full" />
                 <div className="absolute inset-0 bg-gradient-to-t from-containment-950/90 via-transparent to-transparent" />
                 <div className="absolute bottom-4 left-4 right-4">
-                  <p className="text-xs font-mono text-cherenkov-300 uppercase tracking-wider">{g.album}</p>
-                  <p className="text-sm text-alloy-100 mt-1">{g.title}</p>
+                  <p className="font-mono text-xs tracking-wider uppercase text-cherenkov-300">{g.album}</p>
+                  <p className="mt-1 text-sm text-alloy-100">{g.title}</p>
                 </div>
               </div>
             </SwiperSlide>
@@ -215,15 +216,15 @@ export default function Home() {
       </section>
 
       {/* ---------------- CTA ---------------- */}
-      <section className="container-page py-20 sm:py-28">
-        <div className="corner-frame panel bg-containment-800/70 p-10 sm:p-16 text-center relative overflow-hidden">
-          <div className="absolute inset-0 hex-bg bg-repeat opacity-30 pointer-events-none" />
+      <section className="py-20 container-page sm:py-28">
+        <div className="relative p-10 overflow-hidden text-center corner-frame panel bg-containment-800/70 sm:p-16">
+          <div className="absolute inset-0 bg-repeat pointer-events-none hex-bg opacity-30" />
           <div className="relative">
-            <Atom className="mx-auto text-cherenkov-400 mb-5" size={40} strokeWidth={1.25} />
-            <h2 className="font-display text-3xl sm:text-4xl font-bold text-alloy-100 mb-4">
+            <Atom className="mx-auto mb-5 text-cherenkov-400" size={40} strokeWidth={1.25} />
+            <h2 className="mb-4 text-3xl font-bold font-display sm:text-4xl text-alloy-100">
               Ready to get your hands on the core?
             </h2>
-            <p className="text-alloy-400 max-w-lg mx-auto mb-8">
+            <p className="max-w-lg mx-auto mb-8 text-alloy-400">
               Join {clubInfo.name.split(' ').slice(1).join(' ')} and get access to bootcamps, research
               mentorship, and a peer group that will out-live your undergrad years.
             </p>
