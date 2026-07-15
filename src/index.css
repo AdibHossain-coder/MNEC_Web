@@ -10,13 +10,13 @@
     scroll-behavior: smooth;
   }
   body {
-    @apply bg-containment-900 text-alloy-100 font-sans antialiased;
+    @apply font-sans antialiased bg-containment-900 text-alloy-100;
     background-image:
       radial-gradient(circle at 15% 0%, rgba(94,200,232,0.08), transparent 45%),
       radial-gradient(circle at 85% 20%, rgba(242,179,61,0.06), transparent 40%);
   }
   ::selection {
-    @apply bg-cherenkov-500/40 text-white;
+    @apply text-white bg-cherenkov-500/40;
   }
   :focus-visible {
     outline: 2px solid #5EC8E8;
@@ -29,7 +29,7 @@
     @apply font-mono text-xs tracking-[0.25em] uppercase text-cherenkov-400;
   }
   .container-page {
-    @apply max-w-7xl mx-auto px-5 sm:px-8 lg:px-10;
+    @apply px-5 mx-auto max-w-7xl sm:px-8 lg:px-10;
   }
   .btn-primary {
     @apply inline-flex items-center gap-2 rounded-sm bg-cherenkov-400 text-containment-950 font-semibold px-6 py-3 text-sm tracking-wide transition-all hover:bg-cherenkov-300 hover:shadow-glow active:scale-[0.98];
@@ -41,8 +41,14 @@
     @apply inline-flex items-center gap-2 rounded-sm bg-uranium-400 text-containment-950 font-semibold px-6 py-3 text-sm tracking-wide transition-all hover:bg-uranium-300 hover:shadow-glow-amber active:scale-[0.98];
   }
   .panel {
-    @apply bg-containment-800/70 border border-containment-600 rounded-sm backdrop-blur-sm;
+    @apply border rounded-sm bg-containment-800/70 border-containment-600 backdrop-blur-sm;
   }
+  
+  /* NEW CARD HOVER UTILITY */
+  .card-hover {
+    @apply transition-all duration-300 group hover:border-cherenkov-400/50 hover:-translate-y-1 hover:bg-containment-800/80;
+  }
+
   .corner-frame {
     position: relative;
   }
