@@ -3,18 +3,14 @@ import {
   collection, addDoc, updateDoc, deleteDoc, doc, serverTimestamp,
 } from 'firebase/firestore'
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
-import { Plus, Pencil, Trash2, X, Save, UploadCloud, Loader2 } from 'lucide-react'
+import { Plus, Pencil, Trash2, X, Save, UploadCloud, Loader2, DatabaseZap } from 'lucide-react'
 import { db, storage, isFirebaseConfigured } from '../../lib/firebase.js'
 import { useFirestoreCollection } from '../../hooks/useFirestoreCollection.js'
 import DemoBanner from '../../components/DemoBanner.jsx'
 
-/**
- * Config-driven CRUD screen.
- * fields: [{ key, label, type: 'text'|'textarea'|'date'|'image'|'select', options? }]
- */
 export default function AdminCollectionManager({ title, description, collectionName, fields, fallbackData }) {
   const { data, usingFallback } = useFirestoreCollection(collectionName, fallbackData)
-  const [editing, setEditing] = useState(null) // null | 'new' | doc object
+  const [editing, setEditing] = useState(null)
   const [form, setForm] = useState({})
   const [saving, setSaving] = useState(false)
   const [uploading, setUploading] = useState(false)
@@ -83,78 +79,92 @@ export default function AdminCollectionManager({ title, description, collectionN
   }
 
   return (
-    <div>
-      <div className="flex items-start justify-between gap-4 mb-6 flex-wrap">
+    <div className="max-w-6xl mx-auto">
+      <div className="flex flex-wrap items-start justify-between gap-6 mb-8">
         <div>
-          <h1 className="font-display text-2xl font-bold text-alloy-100">{title}</h1>
-          {description && <p className="text-sm text-alloy-400 mt-1">{description}</p>}
+          <div className="flex items-center gap-3 mb-2">
+            <DatabaseZap size={22} className="text-cherenkov-400" />
+            <h1 className="text-2xl font-bold font-display text-alloy-100">{title}</h1>
+          </div>
+          {description && <p className="text-sm text-alloy-400">{description}</p>}
         </div>
         <button onClick={openNew} disabled={!isFirebaseConfigured} className="btn-primary !py-2.5 disabled:opacity-50">
-          <Plus size={16} /> Add new
+          <Plus size={16} /> Add New Entry
         </button>
       </div>
 
       <DemoBanner usingFallback={usingFallback} />
 
-      <div className="mt-6 panel divide-y divide-containment-600">
-        {data.map((item) => (
-          <div key={item.id} className="flex items-center gap-4 p-4">
-            {fields.some((f) => f.type === 'image') && item[fields.find((f) => f.type === 'image').key] && (
-              <img
-                src={item[fields.find((f) => f.type === 'image').key]}
-                alt=""
-                className="w-12 h-12 rounded-sm object-cover shrink-0 border border-containment-600"
-              />
-            )}
-            <div className="flex-1 min-w-0">
-              <p className="text-alloy-100 font-medium truncate">{item[fields[0].key]}</p>
-              {fields[1] && <p className="text-xs text-alloy-500 font-mono mt-0.5 truncate">{item[fields[1].key]}</p>}
+      {/* ---------------- DATA TABLE / LIST ---------------- */}
+      <div className="mt-8 overflow-hidden panel">
+        <div className="divide-y divide-containment-600">
+          {data.map((item) => (
+            <div key={item.id} className="flex items-center gap-4 p-4 transition-colors hover:bg-containment-800/60 group">
+              {fields.some((f) => f.type === 'image') && item[fields.find((f) => f.type === 'image').key] && (
+                <img
+                  src={item[fields.find((f) => f.type === 'image').key]}
+                  alt=""
+                  className="object-cover w-12 h-12 border rounded-sm shrink-0 border-containment-600"
+                />
+              )}
+              <div className="flex-1 min-w-0">
+                <p className="font-medium truncate transition-colors text-alloy-100 group-hover:text-cherenkov-300">{item[fields[0].key]}</p>
+                {fields[1] && <p className="mt-1 font-mono text-xs truncate text-alloy-500">{item[fields[1].key]}</p>}
+              </div>
+              <div className="flex items-center gap-1 transition-opacity opacity-100 sm:opacity-0 sm:group-hover:opacity-100">
+                <button onClick={() => openEdit(item)} className="p-2 transition-colors border rounded-sm border-containment-600 bg-containment-900 text-alloy-400 hover:text-cherenkov-300 hover:border-cherenkov-400/50" aria-label="Edit">
+                  <Pencil size={15} />
+                </button>
+                <button onClick={() => setConfirmDelete(item.id)} className="p-2 transition-colors border rounded-sm border-containment-600 bg-containment-900 text-alloy-400 hover:text-hazard hover:border-hazard/50 hover:bg-hazard/10" aria-label="Delete">
+                  <Trash2 size={15} />
+                </button>
+              </div>
             </div>
-            <button onClick={() => openEdit(item)} className="p-2 text-alloy-400 hover:text-cherenkov-300" aria-label="Edit">
-              <Pencil size={15} />
-            </button>
-            <button onClick={() => setConfirmDelete(item.id)} className="p-2 text-alloy-400 hover:text-hazard" aria-label="Delete">
-              <Trash2 size={15} />
-            </button>
-          </div>
-        ))}
-        {data.length === 0 && <p className="p-8 text-center text-alloy-500 text-sm">No entries yet.</p>}
+          ))}
+          {data.length === 0 && (
+            <div className="py-16 text-center">
+              <p className="font-mono text-sm text-alloy-500">NO DATA RECORDS FOUND.</p>
+            </div>
+          )}
+        </div>
       </div>
 
+      {/* ---------------- EDIT / NEW MODAL ---------------- */}
       {editing && (
-        <div className="fixed inset-0 z-[100] bg-containment-950/90 backdrop-blur-sm flex items-center justify-center p-5" onClick={closeForm}>
+        <div className="fixed inset-0 z-[100] bg-containment-950/90 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6" onClick={closeForm}>
           <form
             onSubmit={handleSave}
             onClick={(e) => e.stopPropagation()}
-            className="panel bg-containment-900 w-full max-w-lg max-h-[85vh] overflow-y-auto p-6"
+            className="relative w-full max-w-2xl max-h-[85vh] p-6 overflow-y-auto corner-frame panel bg-containment-900 sm:p-8"
           >
-            <div className="flex items-center justify-between mb-5">
-              <h2 className="font-display text-lg font-semibold text-alloy-100">
-                {editing === 'new' ? 'Add entry' : 'Edit entry'}
+            <div className="flex items-center justify-between pb-4 mb-8 border-b border-containment-600">
+              <h2 className="flex items-center gap-2 text-xl font-bold font-display text-alloy-100">
+                {editing === 'new' ? <><Plus size={18} className="text-cherenkov-400"/> Create New Entry</> : <><Pencil size={18} className="text-cherenkov-400"/> Modify Database Entry</>}
               </h2>
-              <button type="button" onClick={closeForm} className="text-alloy-400 hover:text-alloy-100">
-                <X size={18} />
+              <button type="button" onClick={closeForm} className="p-1 transition-colors rounded-sm text-alloy-500 hover:bg-containment-800 hover:text-alloy-100">
+                <X size={20} />
               </button>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-5">
               {fields.map((f) => (
                 <div key={f.key}>
-                  <label className="data-label block mb-1.5">{f.label}</label>
+                  <label className="block mb-2 data-label">{f.label}</label>
+                  
                   {f.type === 'textarea' ? (
                     <textarea
-                      rows={4}
+                      rows={5}
                       value={form[f.key] || ''}
                       onChange={(e) => setForm({ ...form, [f.key]: e.target.value })}
-                      className="w-full bg-containment-800 border border-containment-600 rounded-sm px-3 py-2 text-sm text-alloy-100 focus:border-cherenkov-400 outline-none"
+                      className="w-full px-4 py-3 text-sm transition-colors border rounded-sm outline-none resize-y bg-containment-950/50 border-containment-600 text-alloy-100 focus:border-cherenkov-400"
                     />
                   ) : f.type === 'select' ? (
                     <select
                       value={form[f.key] || ''}
                       onChange={(e) => setForm({ ...form, [f.key]: e.target.value })}
-                      className="w-full bg-containment-800 border border-containment-600 rounded-sm px-3 py-2 text-sm text-alloy-100 focus:border-cherenkov-400 outline-none"
+                      className="w-full px-4 py-3 text-sm transition-colors border rounded-sm outline-none bg-containment-950/50 border-containment-600 text-alloy-100 focus:border-cherenkov-400"
                     >
-                      <option value="">Select…</option>
+                      <option value="">Select option…</option>
                       {f.options.map((o) => (
                         <option key={o} value={o}>{o}</option>
                       ))}
@@ -164,42 +174,56 @@ export default function AdminCollectionManager({ title, description, collectionN
                       type={f.type === 'date' ? 'date' : 'text'}
                       value={form[f.key] || ''}
                       onChange={(e) => setForm({ ...form, [f.key]: e.target.value })}
-                      className="w-full bg-containment-800 border border-containment-600 rounded-sm px-3 py-2 text-sm text-alloy-100 focus:border-cherenkov-400 outline-none"
+                      className="w-full px-4 py-3 text-sm transition-colors border rounded-sm outline-none bg-containment-950/50 border-containment-600 text-alloy-100 focus:border-cherenkov-400"
                     />
                   )}
+                  
+                  {/* Image Upload Input */}
                   {f.type === 'image' && (
-                    <label className="mt-2 flex items-center gap-2 text-xs text-cherenkov-300 cursor-pointer w-fit">
-                      {uploading ? <Loader2 size={13} className="animate-spin" /> : <UploadCloud size={13} />}
-                      {uploading ? 'Uploading…' : 'Or upload an image file'}
-                      <input
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        onChange={(e) => handleUpload(e.target.files[0], f.key)}
-                      />
-                    </label>
+                    <div className="mt-3">
+                      <label className="flex items-center justify-center w-full gap-2 p-4 text-sm transition-all border border-dashed rounded-sm cursor-pointer border-containment-500 bg-containment-950/30 text-alloy-400 hover:border-cherenkov-400 hover:text-cherenkov-300">
+                        {uploading ? <Loader2 size={16} className="animate-spin" /> : <UploadCloud size={16} />}
+                        {uploading ? 'Transmitting data...' : 'Click to select image file'}
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) => handleUpload(e.target.files[0], f.key)}
+                        />
+                      </label>
+                      {form[f.key] && !uploading && (
+                        <div className="mt-3 overflow-hidden border rounded-sm w-fit border-containment-600">
+                           <img src={form[f.key]} alt="Preview" className="object-cover h-20 max-w-full" />
+                        </div>
+                      )}
+                    </div>
                   )}
                 </div>
               ))}
             </div>
 
-            <button type="submit" disabled={saving} className="btn-primary w-full justify-center mt-6 disabled:opacity-60">
-              <Save size={16} /> {saving ? 'Saving…' : 'Save entry'}
-            </button>
+            <div className="pt-6 mt-8 border-t border-containment-600">
+              <button type="submit" disabled={saving || uploading} className="justify-center w-full btn-primary disabled:opacity-60">
+                <Save size={18} /> {saving ? 'Writing to database…' : 'Save Entry'}
+              </button>
+            </div>
           </form>
         </div>
       )}
 
+      {/* ---------------- DELETE CONFIRMATION ---------------- */}
       {confirmDelete && (
         <div className="fixed inset-0 z-[100] bg-containment-950/90 backdrop-blur-sm flex items-center justify-center p-5" onClick={() => setConfirmDelete(null)}>
-          <div className="panel bg-containment-900 p-6 max-w-sm w-full" onClick={(e) => e.stopPropagation()}>
-            <p className="text-alloy-100 mb-5">Delete this entry permanently? This can't be undone.</p>
+          <div className="w-full max-w-sm p-6 text-center corner-frame panel bg-containment-900" onClick={(e) => e.stopPropagation()}>
+            <Trash2 size={32} className="mx-auto mb-4 text-hazard" strokeWidth={1.5} />
+            <h3 className="mb-2 text-xl font-bold font-display text-alloy-100">Confirm Deletion</h3>
+            <p className="mb-8 text-sm leading-relaxed text-alloy-400">This action will permanently remove this record from the database. This cannot be undone.</p>
             <div className="flex gap-3">
-              <button onClick={() => handleDelete(confirmDelete)} className="btn-primary !bg-hazard hover:!bg-hazard/80 flex-1 justify-center">
-                Delete
-              </button>
-              <button onClick={() => setConfirmDelete(null)} className="btn-secondary flex-1 justify-center">
+              <button onClick={() => setConfirmDelete(null)} className="flex-1 justify-center btn-secondary !py-2.5">
                 Cancel
+              </button>
+              <button onClick={() => handleDelete(confirmDelete)} className="flex-1 justify-center btn-primary !bg-hazard hover:!bg-hazard/80 hover:shadow-[0_0_20px_rgba(232,84,42,0.3)] !py-2.5">
+                Delete
               </button>
             </div>
           </div>
