@@ -1,5 +1,6 @@
 import { Suspense, lazy } from 'react'
 import { Routes, Route } from 'react-router-dom'
+import { motion } from 'framer-motion'
 
 import Layout from './components/Layout.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
@@ -28,22 +29,34 @@ const AdminActivities = lazy(() => import('./pages/admin/AdminActivities.jsx'))
 const AdminResources = lazy(() => import('./pages/admin/AdminResources.jsx'))
 const AdminGallery = lazy(() => import('./pages/admin/AdminGallery.jsx'))
 
+// Reusable wrapper for smooth page entrances
+const PageTransition = ({ children }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 15 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.4, ease: 'easeOut' }}
+    className="flex flex-col flex-1"
+  >
+    {children}
+  </motion.div>
+)
+
 export default function App() {
   return (
     <Suspense fallback={<Loader label="Initializing Module" />}>
       <Routes>
         <Route element={<Layout />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/news" element={<News />} />
-          <Route path="/news/:id" element={<NewsDetail />} />
-          <Route path="/panel" element={<Panel />} />
-          <Route path="/alumni" element={<Alumni />} />
-          <Route path="/activities" element={<Activities />} />
-          <Route path="/resources" element={<Resources />} />
-          <Route path="/gallery" element={<Gallery />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="*" element={<NotFound />} />
+          <Route path="/" element={<PageTransition><Home /></PageTransition>} />
+          <Route path="/news" element={<PageTransition><News /></PageTransition>} />
+          <Route path="/news/:id" element={<PageTransition><NewsDetail /></PageTransition>} />
+          <Route path="/panel" element={<PageTransition><Panel /></PageTransition>} />
+          <Route path="/alumni" element={<PageTransition><Alumni /></PageTransition>} />
+          <Route path="/activities" element={<PageTransition><Activities /></PageTransition>} />
+          <Route path="/resources" element={<PageTransition><Resources /></PageTransition>} />
+          <Route path="/gallery" element={<PageTransition><Gallery /></PageTransition>} />
+          <Route path="/about" element={<PageTransition><About /></PageTransition>} />
+          <Route path="/login" element={<PageTransition><Login /></PageTransition>} />
+          <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
         </Route>
 
         <Route
@@ -54,13 +67,13 @@ export default function App() {
             </ProtectedRoute>
           }
         >
-          <Route index element={<AdminDashboard />} />
-          <Route path="news" element={<AdminNews />} />
-          <Route path="panel" element={<AdminPanel />} />
-          <Route path="alumni" element={<AdminAlumni />} />
-          <Route path="activities" element={<AdminActivities />} />
-          <Route path="resources" element={<AdminResources />} />
-          <Route path="gallery" element={<AdminGallery />} />
+          <Route index element={<PageTransition><AdminDashboard /></PageTransition>} />
+          <Route path="news" element={<PageTransition><AdminNews /></PageTransition>} />
+          <Route path="panel" element={<PageTransition><AdminPanel /></PageTransition>} />
+          <Route path="alumni" element={<PageTransition><AdminAlumni /></PageTransition>} />
+          <Route path="activities" element={<PageTransition><AdminActivities /></PageTransition>} />
+          <Route path="resources" element={<PageTransition><AdminResources /></PageTransition>} />
+          <Route path="gallery" element={<PageTransition><AdminGallery /></PageTransition>} />
         </Route>
       </Routes>
     </Suspense>

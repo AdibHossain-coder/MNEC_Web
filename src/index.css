@@ -5,18 +5,18 @@
 @layer base {
   :root {
     /* LIGHT MODE PALETTE */
-    --c-containment-950: 248 250 252; /* slate-50 */
-    --c-containment-900: 241 245 249; /* slate-100 */
-    --c-containment-800: 255 255 255; /* white */
-    --c-containment-700: 226 232 240; /* slate-200 */
-    --c-containment-600: 203 213 225; /* slate-300 */
-    --c-containment-500: 148 163 184; /* slate-400 */
+    --c-containment-950: 248 250 252;
+    --c-containment-900: 241 245 249;
+    --c-containment-800: 255 255 255;
+    --c-containment-700: 226 232 240;
+    --c-containment-600: 203 213 225;
+    --c-containment-500: 148 163 184;
 
-    --c-alloy-100: 15 23 42;          /* slate-900 */
-    --c-alloy-200: 30 41 59;          /* slate-800 */
-    --c-alloy-300: 51 65 85;          /* slate-700 */
-    --c-alloy-400: 71 85 105;         /* slate-600 */
-    --c-alloy-500: 100 116 139;       /* slate-500 */
+    --c-alloy-100: 15 23 42;
+    --c-alloy-200: 30 41 59;
+    --c-alloy-300: 51 65 85;
+    --c-alloy-400: 71 85 105;
+    --c-alloy-500: 100 116 139;
 
     --c-cherenkov-200: 186 230 253;
     --c-cherenkov-300: 2 132 199;
@@ -80,6 +80,22 @@
     outline: 2px solid rgb(var(--c-cherenkov-400));
     outline-offset: 3px;
   }
+
+  /* CUSTOM SCROLLBARS */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background-color: rgb(var(--c-containment-950));
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: rgb(var(--c-containment-600));
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(var(--c-cherenkov-500));
+  }
 }
 
 @layer components {
@@ -102,7 +118,7 @@
     @apply border rounded-sm bg-containment-800/70 border-containment-600 backdrop-blur-sm;
   }
   
-.card-hover {
+  .card-hover {
     @apply transition-all duration-300 hover:border-cherenkov-400/50 hover:-translate-y-1 hover:bg-containment-800/80;
   }
 
@@ -136,5 +152,10 @@
   }
   .divider-dashed {
     @apply border-t border-dashed border-containment-500;
+  }
+
+  /* SKELETON LOADER UTILITY */
+  .skeleton {
+    @apply rounded-sm pointer-events-none animate-pulse bg-containment-700/50;
   }
 }

@@ -3,7 +3,8 @@ import {
   collection, addDoc, updateDoc, deleteDoc, doc, serverTimestamp,
 } from 'firebase/firestore'
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
-import { Plus, Pencil, Trash2, X, Save, UploadCloud, Loader2, DatabaseZap } from 'lucide-react'
+import { Plus, Pencil, Trash2, X, Save, UploadCloud, Loader2, DatabaseZap, CheckCircle2, AlertCircle } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { db, storage, isFirebaseConfigured } from '../../lib/firebase.js'
 import { useFirestoreCollection } from '../../hooks/useFirestoreCollection.js'
 import DemoBanner from '../../components/DemoBanner.jsx'
@@ -15,6 +16,13 @@ export default function AdminCollectionManager({ title, description, collectionN
   const [saving, setSaving] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(null)
+  const [toast, setToast] = useState(null)
+
+  // Custom Toast Notification Handler
+  const showToast = (message, type = 'success') => {
+    setToast({ message, type })
+    setTimeout(() => setToast(null), 3000)
+  }
 
   function openNew() {
     const blank = Object.fromEntries(fields.map((f) => [f.key, '']))
@@ -34,19 +42,24 @@ export default function AdminCollectionManager({ title, description, collectionN
 
   async function handleSave(e) {
     e.preventDefault()
-    if (!isFirebaseConfigured) return
+    if (!isFirebaseConfigured) {
+      showToast('Action denied: Database not connected.', 'error')
+      return
+    }
     setSaving(true)
     try {
       const payload = { ...form }
       delete payload.id
       if (editing === 'new') {
         await addDoc(collection(db, collectionName), { ...payload, createdAt: serverTimestamp() })
+        showToast('New entry created successfully.')
       } else {
         await updateDoc(doc(db, collectionName, editing), payload)
+        showToast('Record updated successfully.')
       }
       closeForm()
     } catch (err) {
-      alert('Save failed: ' + err.message)
+      showToast('Database write failed: ' + err.message, 'error')
     } finally {
       setSaving(false)
     }
@@ -56,9 +69,10 @@ export default function AdminCollectionManager({ title, description, collectionN
     if (!isFirebaseConfigured) return
     try {
       await deleteDoc(doc(db, collectionName, id))
+      showToast('Record permanently deleted.')
       setConfirmDelete(null)
     } catch (err) {
-      alert('Delete failed: ' + err.message)
+      showToast('Deletion failed: ' + err.message, 'error')
     }
   }
 
@@ -71,15 +85,16 @@ export default function AdminCollectionManager({ title, description, collectionN
       await uploadBytes(storageRef, file)
       const url = await getDownloadURL(storageRef)
       setForm((f) => ({ ...f, [key]: url }))
+      showToast('File transmitted successfully.')
     } catch (err) {
-      alert('Upload failed: ' + err.message)
+      showToast('Upload failed: ' + err.message, 'error')
     } finally {
       setUploading(false)
     }
   }
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="relative max-w-6xl mx-auto">
       <div className="flex flex-wrap items-start justify-between gap-6 mb-8">
         <div>
           <div className="flex items-center gap-3 mb-2">
@@ -229,6 +244,25 @@ export default function AdminCollectionManager({ title, description, collectionN
           </div>
         </div>
       )}
+
+      {/* ---------------- TOAST NOTIFICATION ---------------- */}
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            className={`fixed bottom-6 right-6 z-[200] flex items-center gap-3 px-4 py-3 border rounded-sm shadow-xl backdrop-blur-md ${
+              toast.type === 'error' 
+                ? 'bg-hazard/10 border-hazard/30 text-hazard' 
+                : 'bg-containment-900 border-containment-600 text-alloy-100'
+            }`}
+          >
+            {toast.type === 'error' ? <AlertCircle size={18} /> : <CheckCircle2 size={18} className="text-cherenkov-400" />}
+            <p className="text-sm font-medium">{toast.message}</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
