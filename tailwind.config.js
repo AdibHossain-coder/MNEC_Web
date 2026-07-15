@@ -1,38 +1,39 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: 'class',
   content: ['./index.html', './src/**/*.{js,jsx}'],
   theme: {
     extend: {
       colors: {
         containment: {
-          950: '#070A0F',
-          900: '#0A0E14',
-          800: '#111826',
-          700: '#182231',
-          600: '#22303F',
-          500: '#334255',
+          950: 'rgb(var(--c-containment-950) / <alpha-value>)',
+          900: 'rgb(var(--c-containment-900) / <alpha-value>)',
+          800: 'rgb(var(--c-containment-800) / <alpha-value>)',
+          700: 'rgb(var(--c-containment-700) / <alpha-value>)',
+          600: 'rgb(var(--c-containment-600) / <alpha-value>)',
+          500: 'rgb(var(--c-containment-500) / <alpha-value>)',
         },
         cherenkov: {
-          200: '#BEEFFB',
-          300: '#8FE0F5',
-          400: '#5EC8E8',
-          500: '#38AAD1',
-          600: '#2687AC',
+          200: 'rgb(var(--c-cherenkov-200) / <alpha-value>)',
+          300: 'rgb(var(--c-cherenkov-300) / <alpha-value>)',
+          400: 'rgb(var(--c-cherenkov-400) / <alpha-value>)',
+          500: 'rgb(var(--c-cherenkov-500) / <alpha-value>)',
+          600: 'rgb(var(--c-cherenkov-600) / <alpha-value>)',
         },
         uranium: {
-          300: '#F7D488',
-          400: '#F2B33D',
-          500: '#DE9A22',
-          600: '#B87A15',
+          300: 'rgb(var(--c-uranium-300) / <alpha-value>)',
+          400: 'rgb(var(--c-uranium-400) / <alpha-value>)',
+          500: 'rgb(var(--c-uranium-500) / <alpha-value>)',
+          600: 'rgb(var(--c-uranium-600) / <alpha-value>)',
         },
         alloy: {
-          100: '#EDF2F6',
-          200: '#D6DEE6',
-          300: '#AEBAC7',
-          400: '#8B9BAE',
-          500: '#647082',
+          100: 'rgb(var(--c-alloy-100) / <alpha-value>)',
+          200: 'rgb(var(--c-alloy-200) / <alpha-value>)',
+          300: 'rgb(var(--c-alloy-300) / <alpha-value>)',
+          400: 'rgb(var(--c-alloy-400) / <alpha-value>)',
+          500: 'rgb(var(--c-alloy-500) / <alpha-value>)',
         },
-        hazard: '#E8542A',
+        hazard: 'rgb(var(--c-hazard) / <alpha-value>)',
       },
       fontFamily: {
         display: ['"Big Shoulders"', '"Space Grotesk"', 'sans-serif'],
@@ -40,11 +41,11 @@ export default {
         mono: ['"JetBrains Mono"', 'monospace'],
       },
       backgroundImage: {
-        'hex-grid': "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100' viewBox='0 0 56 100'%3E%3Cpath d='M28 0L56 16V50L28 66L0 50V16Z' fill='none' stroke='%23223244' stroke-width='1'/%3E%3Cpath d='M28 34L56 50V84L28 100L0 84V50Z' fill='none' stroke='%23223244' stroke-width='1'/%3E%3C/svg%3E\")",
+        'hex-grid': "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100' viewBox='0 0 56 100'%3E%3Cpath d='M28 0L56 16V50L28 66L0 50V16Z' fill='none' stroke='rgba(139,155,174,0.1)' stroke-width='1'/%3E%3Cpath d='M28 34L56 50V84L28 100L0 84V50Z' fill='none' stroke='rgba(139,155,174,0.1)' stroke-width='1'/%3E%3C/svg%3E\")",
       },
       boxShadow: {
-        glow: '0 0 40px -6px rgba(94,200,232,0.45)',
-        'glow-amber': '0 0 40px -6px rgba(242,179,61,0.4)',
+        glow: '0 0 40px -6px rgba(var(--c-cherenkov-400), 0.45)',
+        'glow-amber': '0 0 40px -6px rgba(var(--c-uranium-400), 0.4)',
       },
       keyframes: {
         pulseCore: {

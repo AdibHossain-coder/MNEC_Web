@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, Atom, ShieldCheck } from 'lucide-react'
+import { Menu, X, Atom, ShieldCheck, Sun, Moon } from 'lucide-react'
 import { navLinks } from '../data/dummyData.js'
 import { useAuth } from '../context/AuthContext.jsx'
+import { useTheme } from '../context/ThemeContext.jsx'
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const { user } = useAuth()
+  const { theme, toggleTheme } = useTheme()
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12)
@@ -63,7 +65,7 @@ export default function Navbar() {
                       transition={{ type: 'spring', bounce: 0.2, duration: 0.5 }}
                     />
                   )}
-                  <span className={`relative z-10 transition-colors ${isActive ? 'text-cherenkov-300' : 'text-alloy-300 hover:text-alloy-100'}`}>
+                  <span className={`relative z-10 transition-colors ${isActive ? 'text-cherenkov-400' : 'text-alloy-300 hover:text-alloy-100'}`}>
                     {link.name}
                   </span>
                 </>
@@ -72,21 +74,38 @@ export default function Navbar() {
           ))}
         </div>
 
-        <div className="items-center hidden gap-3 lg:flex">
+        <div className="items-center hidden gap-4 lg:flex">
+          <button 
+            onClick={toggleTheme} 
+            className="p-2 transition-colors border rounded-sm text-alloy-400 border-containment-600 bg-containment-800 hover:text-cherenkov-400 hover:border-cherenkov-400/50"
+            aria-label="Toggle theme"
+          >
+            {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+          </button>
+          
           <NavLink to={user ? '/admin' : '/login'} className="btn-secondary !px-4 !py-2 !text-xs">
             <ShieldCheck size={14} />
             {user ? 'Dashboard' : 'Executive Login'}
           </NavLink>
         </div>
 
-        <button
-          className="p-2 lg:hidden text-alloy-100"
-          onClick={() => setOpen((o) => !o)}
-          aria-label={open ? 'Close menu' : 'Open menu'}
-          aria-expanded={open}
-        >
-          {open ? <X size={26} /> : <Menu size={26} />}
-        </button>
+        <div className="flex items-center gap-3 lg:hidden">
+          <button 
+            onClick={toggleTheme} 
+            className="p-2 transition-colors border rounded-sm text-alloy-400 border-containment-600 bg-containment-800"
+            aria-label="Toggle theme"
+          >
+            {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+          </button>
+          <button
+            className="p-2 text-alloy-100"
+            onClick={() => setOpen((o) => !o)}
+            aria-label={open ? 'Close menu' : 'Open menu'}
+            aria-expanded={open}
+          >
+            {open ? <X size={26} /> : <Menu size={26} />}
+          </button>
+        </div>
       </nav>
 
       <AnimatePresence>
@@ -107,7 +126,7 @@ export default function Navbar() {
                   onClick={() => setOpen(false)}
                   className={({ isActive }) =>
                     `px-3 py-3 text-sm font-medium rounded-sm ${
-                      isActive ? 'text-cherenkov-300 bg-cherenkov-400/10' : 'text-alloy-300'
+                      isActive ? 'text-cherenkov-400 bg-cherenkov-400/10' : 'text-alloy-300'
                     }`
                   }
                 >

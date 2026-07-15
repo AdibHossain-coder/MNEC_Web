@@ -3,23 +3,81 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    /* LIGHT MODE PALETTE */
+    --c-containment-950: 248 250 252; /* slate-50 */
+    --c-containment-900: 241 245 249; /* slate-100 */
+    --c-containment-800: 255 255 255; /* white */
+    --c-containment-700: 226 232 240; /* slate-200 */
+    --c-containment-600: 203 213 225; /* slate-300 */
+    --c-containment-500: 148 163 184; /* slate-400 */
+
+    --c-alloy-100: 15 23 42;          /* slate-900 */
+    --c-alloy-200: 30 41 59;          /* slate-800 */
+    --c-alloy-300: 51 65 85;          /* slate-700 */
+    --c-alloy-400: 71 85 105;         /* slate-600 */
+    --c-alloy-500: 100 116 139;       /* slate-500 */
+
+    --c-cherenkov-200: 186 230 253;
+    --c-cherenkov-300: 2 132 199;
+    --c-cherenkov-400: 3 105 161;
+    --c-cherenkov-500: 7 89 133;
+    --c-cherenkov-600: 12 74 110;
+
+    --c-uranium-300: 253 230 138;
+    --c-uranium-400: 217 119 6;
+    --c-uranium-500: 180 83 9;
+    --c-uranium-600: 146 64 14;
+
+    --c-hazard: 220 38 38;
+  }
+
+  .dark {
+    /* ORIGINAL DARK MODE PALETTE */
+    --c-containment-950: 7 10 15;
+    --c-containment-900: 10 14 20;
+    --c-containment-800: 17 24 38;
+    --c-containment-700: 24 34 49;
+    --c-containment-600: 34 48 63;
+    --c-containment-500: 51 66 85;
+
+    --c-alloy-100: 237 242 246;
+    --c-alloy-200: 214 222 230;
+    --c-alloy-300: 174 186 199;
+    --c-alloy-400: 139 155 174;
+    --c-alloy-500: 100 112 130;
+
+    --c-cherenkov-200: 190 239 251;
+    --c-cherenkov-300: 143 224 245;
+    --c-cherenkov-400: 94 200 232;
+    --c-cherenkov-500: 56 170 209;
+    --c-cherenkov-600: 38 135 172;
+
+    --c-uranium-300: 247 212 136;
+    --c-uranium-400: 242 179 61;
+    --c-uranium-500: 222 154 34;
+    --c-uranium-600: 184 122 21;
+
+    --c-hazard: 232 84 42;
+  }
+
   * {
-    @apply border-containment-600/60;
+    @apply border-containment-600;
   }
   html {
     scroll-behavior: smooth;
   }
   body {
-    @apply font-sans antialiased bg-containment-900 text-alloy-100;
+    @apply font-sans antialiased transition-colors duration-300 bg-containment-900 text-alloy-100;
     background-image:
-      radial-gradient(circle at 15% 0%, rgba(94,200,232,0.08), transparent 45%),
-      radial-gradient(circle at 85% 20%, rgba(242,179,61,0.06), transparent 40%);
+      radial-gradient(circle at 15% 0%, rgb(var(--c-cherenkov-400) / 0.08), transparent 45%),
+      radial-gradient(circle at 85% 20%, rgb(var(--c-uranium-400) / 0.06), transparent 40%);
   }
   ::selection {
     @apply text-white bg-cherenkov-500/40;
   }
   :focus-visible {
-    outline: 2px solid #5EC8E8;
+    outline: 2px solid rgb(var(--c-cherenkov-400));
     outline-offset: 3px;
   }
 }
@@ -35,7 +93,7 @@
     @apply inline-flex items-center gap-2 rounded-sm bg-cherenkov-400 text-containment-950 font-semibold px-6 py-3 text-sm tracking-wide transition-all hover:bg-cherenkov-300 hover:shadow-glow active:scale-[0.98];
   }
   .btn-secondary {
-    @apply inline-flex items-center gap-2 rounded-sm border border-alloy-500/50 text-alloy-100 font-semibold px-6 py-3 text-sm tracking-wide transition-all hover:border-cherenkov-400 hover:text-cherenkov-300 active:scale-[0.98];
+    @apply inline-flex items-center gap-2 rounded-sm border border-alloy-500/50 text-alloy-100 font-semibold px-6 py-3 text-sm tracking-wide transition-all hover:border-cherenkov-400 hover:text-cherenkov-400 active:scale-[0.98];
   }
   .btn-amber {
     @apply inline-flex items-center gap-2 rounded-sm bg-uranium-400 text-containment-950 font-semibold px-6 py-3 text-sm tracking-wide transition-all hover:bg-uranium-300 hover:shadow-glow-amber active:scale-[0.98];
@@ -44,7 +102,6 @@
     @apply border rounded-sm bg-containment-800/70 border-containment-600 backdrop-blur-sm;
   }
   
-  /* NEW CARD HOVER UTILITY */
   .card-hover {
     @apply transition-all duration-300 group hover:border-cherenkov-400/50 hover:-translate-y-1 hover:bg-containment-800/80;
   }
@@ -58,8 +115,9 @@
     position: absolute;
     width: 14px;
     height: 14px;
-    border-color: #5EC8E8;
+    border-color: rgb(var(--c-cherenkov-400));
     opacity: 0.7;
+    transition: border-color 0.3s ease;
   }
   .corner-frame::before {
     top: -1px; left: -1px;
