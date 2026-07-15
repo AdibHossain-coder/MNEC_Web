@@ -74,7 +74,7 @@ export default function News() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.45, delay: (i % 6) * 0.08 }}
-                className="relative flex flex-col overflow-hidden corner-frame panel card-hover"
+                className="relative flex flex-col overflow-hidden corner-frame panel card-hover group"
               >
                 <div className="aspect-[16/10] overflow-hidden border-b border-containment-600 relative">
                   <div className="absolute inset-0 z-10 transition-opacity duration-300 opacity-0 pointer-events-none bg-cherenkov-400/10 group-hover:opacity-100" />

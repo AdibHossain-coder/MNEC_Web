@@ -102,8 +102,8 @@
     @apply border rounded-sm bg-containment-800/70 border-containment-600 backdrop-blur-sm;
   }
   
-  .card-hover {
-    @apply transition-all duration-300 group hover:border-cherenkov-400/50 hover:-translate-y-1 hover:bg-containment-800/80;
+.card-hover {
+    @apply transition-all duration-300 hover:border-cherenkov-400/50 hover:-translate-y-1 hover:bg-containment-800/80;
   }
 
   .corner-frame {

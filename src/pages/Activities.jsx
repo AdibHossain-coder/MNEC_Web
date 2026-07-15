@@ -30,7 +30,7 @@ export default function Activities() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.45, delay: (i % 6) * 0.08 }}
-                className="relative flex flex-col p-8 corner-frame panel card-hover"
+                className="relative flex flex-col p-8 corner-frame panel card-hover group"
               >
                 {/* Decorative Background Number */}
                 <div className="absolute text-5xl font-bold transition-colors pointer-events-none top-4 right-6 font-display text-containment-600/20 group-hover:text-cherenkov-400/10">

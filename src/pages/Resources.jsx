@@ -80,7 +80,7 @@ export default function Resources() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.4, delay: (i % 8) * 0.05 }}
-                        className="flex items-start gap-4 p-5 transition-all duration-300 corner-frame panel group hover:border-cherenkov-400/50 hover:-translate-y-1 hover:bg-containment-800/80"
+                        className="flex items-start gap-4 p-5 corner-frame panel card-hover group"
                       >
                         <div className="flex items-center justify-center transition-colors border rounded-sm shrink-0 h-11 w-11 border-containment-600 bg-containment-900 text-cherenkov-400 group-hover:border-cherenkov-400/50 group-hover:bg-cherenkov-400/10">
                           <Icon size={20} strokeWidth={1.5} />

@@ -19,7 +19,7 @@ function CountCard({ card }) {
   const { data } = useFirestoreCollection(card.collection, card.fallback)
   const Icon = card.icon
   return (
-    <Link to={card.to} className="relative flex flex-col p-6 corner-frame panel card-hover">
+    <Link to={card.to} className="relative flex flex-col p-6 corner-frame panel card-hover group">
       <div className="flex items-center justify-between mb-6">
         <div className="p-2 transition-colors border rounded-sm border-containment-600 bg-containment-900 group-hover:border-cherenkov-400/50 group-hover:bg-cherenkov-400/10">
           <Icon className="text-cherenkov-400" size={24} strokeWidth={1.5} />

@@ -49,7 +49,7 @@ export default function Alumni() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.45, delay: (i % 6) * 0.08 }}
-                  className="relative flex gap-5 p-6 corner-frame panel card-hover"
+                  className="relative flex gap-5 p-6 corner-frame panel card-hover group"
                 >
                   <div className="relative shrink-0">
                     <div className="absolute inset-0 transition-opacity duration-300 rounded-sm opacity-0 bg-cherenkov-400 blur-md group-hover:opacity-20" />
