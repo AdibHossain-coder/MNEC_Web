@@ -19,31 +19,51 @@ export default function Activities() {
       />
       <DemoBanner usingFallback={usingFallback} />
 
-      <div className="container-page py-16 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {data.map((a, i) => {
-          const Icon = iconMap[a.icon] || Atom
-          return (
-            <motion.div
-              key={a.id}
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: (i % 6) * 0.06 }}
-              className="corner-frame panel p-6 flex flex-col"
-            >
-              <div className="flex items-center justify-between mb-5">
-                <Icon className="text-cherenkov-400" size={28} strokeWidth={1.5} />
-                <span className="text-[10px] font-mono uppercase tracking-wider text-alloy-500 border border-containment-600 px-2 py-1 flex items-center gap-1">
-                  <Repeat size={10} /> {a.frequency}
-                </span>
-              </div>
-              <span className="data-label text-uranium-400 mb-2">{a.category}</span>
-              <h3 className="font-display text-xl font-semibold text-alloy-100 mb-2">{a.title}</h3>
-              <p className="text-sm text-alloy-400 leading-relaxed">{a.description}</p>
-            </motion.div>
-          )
-        })}
-      </div>
+      <section className="py-20 container-page lg:py-28">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {data.map((a, i) => {
+            const Icon = iconMap[a.icon] || Atom
+            return (
+              <motion.div
+                key={a.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.45, delay: (i % 6) * 0.08 }}
+                className="relative flex flex-col p-8 transition-all duration-300 corner-frame panel group hover:border-cherenkov-400/50 hover:-translate-y-1 hover:bg-containment-800/80"
+              >
+                {/* Decorative Background Number */}
+                <div className="absolute text-5xl font-bold transition-colors pointer-events-none top-4 right-6 font-display text-containment-600/20 group-hover:text-cherenkov-400/10">
+                  {(i + 1).toString().padStart(2, '0')}
+                </div>
+
+                <div className="relative z-10 flex items-center justify-between mb-6">
+                  <Icon 
+                    className="transition-transform duration-300 text-cherenkov-400 group-hover:scale-110 group-hover:-translate-y-1" 
+                    size={32} 
+                    strokeWidth={1.5} 
+                  />
+                </div>
+                
+                <div className="relative z-10 flex items-center gap-3 mb-3">
+                  <span className="data-label text-uranium-400">{a.category}</span>
+                  <span className="flex items-center gap-1 px-2 py-0.5 border font-mono text-[10px] uppercase tracking-wider transition-colors border-containment-600 text-alloy-500 group-hover:border-alloy-500/50">
+                    <Repeat size={10} /> {a.frequency}
+                  </span>
+                </div>
+                
+                <h3 className="relative z-10 mb-3 text-xl font-semibold transition-colors font-display text-alloy-100 group-hover:text-cherenkov-300">
+                  {a.title}
+                </h3>
+                
+                <p className="relative z-10 text-sm leading-relaxed text-alloy-400">
+                  {a.description}
+                </p>
+              </motion.div>
+            )
+          })}
+        </div>
+      </section>
     </div>
   )
 }
