@@ -16,43 +16,63 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = 'hidden'
+      const onKeyDown = (e) => { if (e.key === 'Escape') setOpen(false) }
+      window.addEventListener('keydown', onKeyDown)
+      return () => {
+        document.body.style.overflow = ''
+        window.removeEventListener('keydown', onKeyDown)
+      }
+    }
+    document.body.style.overflow = ''
+  }, [open])
+
   return (
     <header
       className={`sticky top-0 z-50 transition-colors duration-300 ${
         scrolled ? 'bg-containment-950/90 backdrop-blur-md border-b border-containment-600' : 'bg-transparent'
       }`}
     >
-      <nav className="container-page flex items-center justify-between h-20">
+      <nav className={`container-page flex items-center justify-between transition-[height] duration-300 ${scrolled ? 'h-16' : 'h-20'}`}>
         <NavLink to="/" className="flex items-center gap-3 group" onClick={() => setOpen(false)}>
-          <span className="relative flex h-10 w-10 items-center justify-center">
-            <Atom className="h-8 w-8 text-cherenkov-400 group-hover:animate-spinSlow" strokeWidth={1.5} />
+          <span className="relative flex items-center justify-center w-10 h-10">
+            <Atom className="w-8 h-8 text-cherenkov-400 group-hover:animate-spinSlow" strokeWidth={1.5} />
           </span>
-          <span className="font-display leading-tight">
+          <span className="leading-tight font-display">
             <span className="block text-lg font-bold tracking-wide text-alloy-100">MIST NESC</span>
             <span className="block text-[10px] font-mono tracking-[0.2em] text-alloy-400 uppercase">Nuclear Eng. Society</span>
           </span>
         </NavLink>
 
-        <div className="hidden lg:flex items-center gap-1">
+        <div className="items-center hidden gap-1 lg:flex">
           {navLinks.map((link) => (
             <NavLink
               key={link.path}
               to={link.path}
               end={link.path === '/'}
-              className={({ isActive }) =>
-                `px-4 py-2 text-sm font-medium tracking-wide transition-colors rounded-sm ${
-                  isActive
-                    ? 'text-cherenkov-300 bg-cherenkov-400/10'
-                    : 'text-alloy-300 hover:text-alloy-100 hover:bg-containment-700/60'
-                }`
-              }
+              className="relative px-4 py-2 text-sm font-medium tracking-wide rounded-sm"
             >
-              {link.name}
+              {({ isActive }) => (
+                <>
+                  {isActive && (
+                    <motion.span
+                      layoutId="navActiveBg"
+                      className="absolute inset-0 rounded-sm bg-cherenkov-400/10"
+                      transition={{ type: 'spring', bounce: 0.2, duration: 0.5 }}
+                    />
+                  )}
+                  <span className={`relative z-10 transition-colors ${isActive ? 'text-cherenkov-300' : 'text-alloy-300 hover:text-alloy-100'}`}>
+                    {link.name}
+                  </span>
+                </>
+              )}
             </NavLink>
           ))}
         </div>
 
-        <div className="hidden lg:flex items-center gap-3">
+        <div className="items-center hidden gap-3 lg:flex">
           <NavLink to={user ? '/admin' : '/login'} className="btn-secondary !px-4 !py-2 !text-xs">
             <ShieldCheck size={14} />
             {user ? 'Dashboard' : 'Executive Login'}
@@ -60,9 +80,10 @@ export default function Navbar() {
         </div>
 
         <button
-          className="lg:hidden text-alloy-100 p-2"
+          className="p-2 lg:hidden text-alloy-100"
           onClick={() => setOpen((o) => !o)}
           aria-label={open ? 'Close menu' : 'Open menu'}
+          aria-expanded={open}
         >
           {open ? <X size={26} /> : <Menu size={26} />}
         </button>
@@ -75,9 +96,9 @@ export default function Navbar() {
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.25 }}
-            className="lg:hidden overflow-hidden border-t border-containment-600 bg-containment-950/98"
+            className="overflow-hidden border-t lg:hidden border-containment-600 bg-containment-950/98"
           >
-            <div className="container-page py-4 flex flex-col gap-1">
+            <div className="flex flex-col gap-1 py-4 container-page">
               {navLinks.map((link) => (
                 <NavLink
                   key={link.path}
@@ -96,7 +117,7 @@ export default function Navbar() {
               <NavLink
                 to={user ? '/admin' : '/login'}
                 onClick={() => setOpen(false)}
-                className="btn-secondary justify-center mt-2"
+                className="justify-center mt-2 btn-secondary"
               >
                 <ShieldCheck size={14} />
                 {user ? 'Dashboard' : 'Executive Login'}

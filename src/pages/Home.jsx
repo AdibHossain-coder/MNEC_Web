@@ -242,12 +242,15 @@ export default function Home() {
         </Swiper>
       </section>
 
-      {/* ---------------- CTA ---------------- */}
+{/* ---------------- CTA ---------------- */}
       <section className="py-20 container-page sm:py-28">
         <div className="relative p-10 overflow-hidden text-center corner-frame panel bg-containment-800/70 sm:p-16">
           <div className="absolute inset-0 bg-repeat pointer-events-none hex-bg opacity-30" />
           <div className="relative">
-            <Atom className="mx-auto mb-5 text-cherenkov-400" size={40} strokeWidth={1.25} />
+            <div className="relative flex items-center justify-center w-16 h-16 mx-auto mb-5">
+              <div className="absolute inset-0 rounded-full bg-cherenkov-400/20 animate-pulseCore" />
+              <Atom className="relative text-cherenkov-400" size={40} strokeWidth={1.25} />
+            </div>
             <h2 className="mb-4 text-3xl font-bold font-display sm:text-4xl text-alloy-100">
               Ready to get your hands on the core?
             </h2>
@@ -255,9 +258,17 @@ export default function Home() {
               Join {clubInfo.name.split(' ').slice(1).join(' ')} and get access to bootcamps, research
               mentorship, and a peer group that will out-live your undergrad years.
             </p>
-            <a href={`mailto:${clubInfo.email}`} className="btn-primary">
-              Get in touch <ArrowRight size={16} />
-            </a>
+            <div className="flex flex-wrap items-center justify-center gap-4">
+              <a href={`mailto:${clubInfo.email}`} className="btn-primary">
+                Get in touch <ArrowRight size={16} />
+              </a>
+              <Link to="/about" className="btn-secondary">
+                Learn More
+              </Link>
+            </div>
+            <p className="mt-6 font-mono text-[10px] uppercase tracking-[0.2em] text-alloy-500">
+              Open to all years · No prior nuclear experience required
+            </p>
           </div>
         </div>
       </section>
