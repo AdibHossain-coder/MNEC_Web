@@ -3,19 +3,29 @@ import { getAuth } from 'firebase/auth'
 import { getFirestore } from 'firebase/firestore'
 import { getStorage } from 'firebase/storage'
 
-// These values come from your Firebase project settings.
-// Copy .env.example to .env.local and fill them in before deploying.
+// Reads from .env.local if present, with fallback to the MNEC Firebase project
+// so GitHub Pages deployments work out-of-the-box without missing env vars.
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  apiKey:
+    import.meta.env.VITE_FIREBASE_API_KEY ||
+    'AIzaSyAgwJeQUS-1ZLGNYgAMOTusjrRhwa0fLZQ',
+  authDomain:
+    import.meta.env.VITE_FIREBASE_AUTH_DOMAIN ||
+    'nuclearclubmist.firebaseapp.com',
+  projectId:
+    import.meta.env.VITE_FIREBASE_PROJECT_ID ||
+    'nuclearclubmist',
+  storageBucket:
+    import.meta.env.VITE_FIREBASE_STORAGE_BUCKET ||
+    'nuclearclubmist.firebasestorage.app',
+  messagingSenderId:
+    import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID ||
+    '771196145693',
+  appId:
+    import.meta.env.VITE_FIREBASE_APP_ID ||
+    '1:771196145693:web:1bb468495f75146a5fb6f4',
 }
 
-// True once real keys are supplied. Until then, pages fall back to
-// the bundled dummy content so the site is still fully browsable.
 export const isFirebaseConfigured = Boolean(
   firebaseConfig.apiKey && firebaseConfig.projectId
 )
@@ -27,11 +37,6 @@ if (isFirebaseConfigured) {
   auth = getAuth(app)
   db = getFirestore(app)
   storage = getStorage(app)
-} else {
-  console.warn(
-    '[MIST NESC] Firebase env vars are missing — running in demo mode with dummy data. ' +
-    'Add your config to .env.local to enable live content + the admin dashboard.'
-  )
 }
 
 export { app, auth, db, storage }

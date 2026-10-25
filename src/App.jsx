@@ -28,6 +28,7 @@ const AdminAlumni = lazy(() => import('./pages/admin/AdminAlumni.jsx'))
 const AdminActivities = lazy(() => import('./pages/admin/AdminActivities.jsx'))
 const AdminResources = lazy(() => import('./pages/admin/AdminResources.jsx'))
 const AdminGallery = lazy(() => import('./pages/admin/AdminGallery.jsx'))
+const AdminSettings = lazy(() => import('./pages/admin/AdminSettings.jsx'))
 
 // Reusable wrapper for smooth page entrances
 const PageTransition = ({ children }) => (
@@ -74,6 +75,7 @@ export default function App() {
           <Route path="activities" element={<PageTransition><AdminActivities /></PageTransition>} />
           <Route path="resources" element={<PageTransition><AdminResources /></PageTransition>} />
           <Route path="gallery" element={<PageTransition><AdminGallery /></PageTransition>} />
+          <Route path="settings" element={<PageTransition><AdminSettings /></PageTransition>} />
         </Route>
       </Routes>
     </Suspense>
