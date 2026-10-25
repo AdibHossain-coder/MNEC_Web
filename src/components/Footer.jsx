@@ -1,8 +1,11 @@
 import { Link } from 'react-router-dom'
 import { Atom, Facebook, Linkedin, Youtube, Mail, MapPin, ArrowUp, ShieldCheck } from 'lucide-react'
-import { clubInfo, navLinks } from '../data/dummyData.js'
+import { navLinks } from '../data/dummyData.js'
+import { useClubInfo } from '../hooks/useClubInfo.js'
 
 export default function Footer() {
+  const { clubInfo } = useClubInfo()
+
   return (
     <footer className="relative bg-repeat border-t border-containment-600 bg-containment-950 hex-bg overflow-hidden">
       <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-containment-900/50 via-transparent to-containment-950/90" />
@@ -27,7 +30,7 @@ export default function Footer() {
 
           <div className="flex flex-wrap items-center gap-3 mt-6">
             <a
-              href={clubInfo.social.facebook}
+              href={clubInfo.social?.facebook || 'https://facebook.com/'}
               target="_blank"
               rel="noopener noreferrer"
               className="p-2.5 border border-containment-600 bg-containment-900/80 rounded-sm hover:border-cherenkov-400 hover:text-cherenkov-300 hover:shadow-glow hover:-translate-y-1 transition-all"
@@ -36,7 +39,7 @@ export default function Footer() {
               <Facebook size={16} />
             </a>
             <a
-              href={clubInfo.social.linkedin}
+              href={clubInfo.social?.linkedin || 'https://linkedin.com/'}
               target="_blank"
               rel="noopener noreferrer"
               className="p-2.5 border border-containment-600 bg-containment-900/80 rounded-sm hover:border-cherenkov-400 hover:text-cherenkov-300 hover:shadow-glow hover:-translate-y-1 transition-all"
@@ -45,7 +48,7 @@ export default function Footer() {
               <Linkedin size={16} />
             </a>
             <a
-              href={clubInfo.social.youtube}
+              href={clubInfo.social?.youtube || 'https://youtube.com/'}
               target="_blank"
               rel="noopener noreferrer"
               className="p-2.5 border border-containment-600 bg-containment-900/80 rounded-sm hover:border-cherenkov-400 hover:text-cherenkov-300 hover:shadow-glow hover:-translate-y-1 transition-all"

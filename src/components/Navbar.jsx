@@ -2,11 +2,13 @@ import { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, Atom, ShieldCheck, Sun, Moon } from 'lucide-react'
-import { navLinks, clubInfo } from '../data/dummyData.js'
+import { navLinks } from '../data/dummyData.js'
+import { useClubInfo } from '../hooks/useClubInfo.js'
 import { useAuth } from '../context/AuthContext.jsx'
 import { useTheme } from '../context/ThemeContext.jsx'
 
 export default function Navbar() {
+  const { clubInfo } = useClubInfo()
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const { user } = useAuth()
@@ -108,7 +110,7 @@ export default function Navbar() {
 
           <NavLink to={user ? '/admin' : '/login'} className="btn-secondary !px-4 !py-2 !text-xs">
             <ShieldCheck size={14} className="text-cherenkov-400" />
-            {user ? 'Dashboard' : 'Executive Login'}
+            {user ? 'CMS Dashboard' : 'CMS Login'}
           </NavLink>
         </div>
 
@@ -164,7 +166,7 @@ export default function Navbar() {
                 className="justify-center mt-2 btn-secondary"
               >
                 <ShieldCheck size={14} />
-                {user ? 'Dashboard' : 'Executive Login'}
+                {user ? 'CMS Dashboard' : 'CMS Login'}
               </NavLink>
             </div>
           </motion.div>
