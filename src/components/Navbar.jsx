@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, Atom, ShieldCheck, Sun, Moon } from 'lucide-react'
-import { navLinks } from '../data/dummyData.js'
+import { navLinks, clubInfo } from '../data/dummyData.js'
 import { useAuth } from '../context/AuthContext.jsx'
 import { useTheme } from '../context/ThemeContext.jsx'
 
@@ -21,7 +21,9 @@ export default function Navbar() {
   useEffect(() => {
     if (open) {
       document.body.style.overflow = 'hidden'
-      const onKeyDown = (e) => { if (e.key === 'Escape') setOpen(false) }
+      const onKeyDown = (e) => {
+        if (e.key === 'Escape') setOpen(false)
+      }
       window.addEventListener('keydown', onKeyDown)
       return () => {
         document.body.style.overflow = ''
@@ -33,18 +35,32 @@ export default function Navbar() {
 
   return (
     <header
-      className={`sticky top-0 z-50 transition-colors duration-300 ${
-        scrolled ? 'bg-containment-950/90 backdrop-blur-md border-b border-containment-600' : 'bg-transparent'
+      className={`sticky top-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? 'bg-containment-950/90 backdrop-blur-xl border-b border-containment-600 shadow-3d'
+          : 'bg-containment-950/40 backdrop-blur-sm border-b border-containment-600/40'
       }`}
     >
-      <nav className={`container-page flex items-center justify-between transition-[height] duration-300 ${scrolled ? 'h-16' : 'h-20'}`}>
-        <NavLink to="/" className="flex items-center gap-3 group" onClick={() => setOpen(false)}>
-          <span className="relative flex items-center justify-center w-10 h-10">
-            <Atom className="w-8 h-8 text-cherenkov-400 group-hover:animate-spinSlow" strokeWidth={1.5} />
+      <nav
+        className={`container-page flex items-center justify-between transition-[height] duration-300 ${
+          scrolled ? 'h-16' : 'h-20'
+        }`}
+      >
+        <NavLink to="/" className="flex items-center gap-3.5 group" onClick={() => setOpen(false)}>
+          <span className="relative flex items-center justify-center w-11 h-11 rounded-sm border border-cherenkov-400/30 bg-containment-800/80 shadow-glow transition-transform duration-300 group-hover:scale-105 group-hover:border-cherenkov-400">
+            <span className="absolute inset-1 rounded-full bg-cherenkov-400/15 blur-sm group-hover:bg-cherenkov-400/30 transition-colors" />
+            <Atom className="relative w-7 h-7 text-cherenkov-400 group-hover:animate-spinSlow" strokeWidth={1.6} />
           </span>
           <span className="leading-tight font-display">
-            <span className="block text-lg font-bold tracking-wide text-alloy-100">MIST NESC</span>
-            <span className="block text-[10px] font-mono tracking-[0.2em] text-alloy-400 uppercase">Nuclear Eng. Society</span>
+            <span className="flex items-center gap-2 text-lg font-bold tracking-wide text-alloy-100">
+              {clubInfo.shortName}
+              <span className="hidden sm:inline-block px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-widest rounded-sm bg-safety/15 text-safety border border-safety/30">
+                SAFE ENERGY
+              </span>
+            </span>
+            <span className="block text-[10px] font-mono tracking-[0.18em] text-alloy-400 uppercase">
+              MIST Nuclear Eng. Club
+            </span>
           </span>
         </NavLink>
 
@@ -54,18 +70,24 @@ export default function Navbar() {
               key={link.path}
               to={link.path}
               end={link.path === '/'}
-              className="relative px-4 py-2 text-sm font-medium tracking-wide rounded-sm"
+              className="relative px-3.5 py-2 text-sm font-medium tracking-wide rounded-sm group"
             >
               {({ isActive }) => (
                 <>
                   {isActive && (
                     <motion.span
                       layoutId="navActiveBg"
-                      className="absolute inset-0 rounded-sm bg-cherenkov-400/10"
+                      className="absolute inset-0 rounded-sm bg-cherenkov-400/15 border border-cherenkov-400/40 shadow-glow"
                       transition={{ type: 'spring', bounce: 0.2, duration: 0.5 }}
                     />
                   )}
-                  <span className={`relative z-10 transition-colors ${isActive ? 'text-cherenkov-400' : 'text-alloy-300 hover:text-alloy-100'}`}>
+                  <span
+                    className={`relative z-10 transition-colors ${
+                      isActive
+                        ? 'text-cherenkov-300 font-semibold'
+                        : 'text-alloy-300 group-hover:text-cherenkov-300'
+                    }`}
+                  >
                     {link.name}
                   </span>
                 </>
@@ -74,25 +96,26 @@ export default function Navbar() {
           ))}
         </div>
 
-        <div className="items-center hidden gap-4 lg:flex">
-          <button 
-            onClick={toggleTheme} 
-            className="p-2 transition-colors border rounded-sm text-alloy-400 border-containment-600 bg-containment-800 hover:text-cherenkov-400 hover:border-cherenkov-400/50"
+        <div className="items-center hidden gap-3 lg:flex">
+          <button
+            onClick={toggleTheme}
+            className="p-2.5 transition-all duration-300 border rounded-sm text-alloy-300 border-containment-600 bg-containment-800/80 hover:text-cherenkov-300 hover:border-cherenkov-400 hover:shadow-glow hover:-translate-y-0.5"
             aria-label="Toggle theme"
+            title={theme === 'dark' ? 'Switch to Cleanroom Light Mode' : 'Switch to Reactor Dark Mode'}
           >
             {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
           </button>
-          
+
           <NavLink to={user ? '/admin' : '/login'} className="btn-secondary !px-4 !py-2 !text-xs">
-            <ShieldCheck size={14} />
+            <ShieldCheck size={14} className="text-cherenkov-400" />
             {user ? 'Dashboard' : 'Executive Login'}
           </NavLink>
         </div>
 
         <div className="flex items-center gap-3 lg:hidden">
-          <button 
-            onClick={toggleTheme} 
-            className="p-2 transition-colors border rounded-sm text-alloy-400 border-containment-600 bg-containment-800"
+          <button
+            onClick={toggleTheme}
+            className="p-2 transition-colors border rounded-sm text-alloy-300 border-containment-600 bg-containment-800"
             aria-label="Toggle theme"
           >
             {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
@@ -115,7 +138,7 @@ export default function Navbar() {
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.25 }}
-            className="overflow-hidden border-t lg:hidden border-containment-600 bg-containment-950/98"
+            className="overflow-hidden border-t lg:hidden border-containment-600 bg-containment-950/98 backdrop-blur-xl"
           >
             <div className="flex flex-col gap-1 py-4 container-page">
               {navLinks.map((link) => (
@@ -125,8 +148,10 @@ export default function Navbar() {
                   end={link.path === '/'}
                   onClick={() => setOpen(false)}
                   className={({ isActive }) =>
-                    `px-3 py-3 text-sm font-medium rounded-sm ${
-                      isActive ? 'text-cherenkov-400 bg-cherenkov-400/10' : 'text-alloy-300'
+                    `px-3 py-3 text-sm font-medium rounded-sm transition-colors ${
+                      isActive
+                        ? 'text-cherenkov-300 bg-cherenkov-400/15 border border-cherenkov-400/30'
+                        : 'text-alloy-300 hover:bg-containment-800'
                     }`
                   }
                 >

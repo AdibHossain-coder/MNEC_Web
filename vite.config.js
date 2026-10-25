@@ -8,12 +8,15 @@ export default defineConfig({
     port: 5173,
   },
   build: {
+    chunkSizeWarningLimit: 600,
     rollupOptions: {
       output: {
         manualChunks(id) {
-          // Split out heavy third-party libraries into their own cached chunks
+          if (id.includes('node_modules/@firebase/firestore') || id.includes('node_modules/firebase/firestore')) {
+            return 'vendor-firebase-firestore'
+          }
           if (id.includes('node_modules/firebase') || id.includes('node_modules/@firebase')) {
-            return 'vendor-firebase'
+            return 'vendor-firebase-core'
           }
           if (id.includes('node_modules/framer-motion')) {
             return 'vendor-framer'

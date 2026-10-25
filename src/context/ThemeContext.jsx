@@ -3,26 +3,22 @@ import { createContext, useContext, useEffect, useState } from 'react'
 const ThemeContext = createContext()
 
 export function ThemeProvider({ children }) {
-  // Check local storage or system preference on initial load
+  // Default to hyper-realistic dark reactor theme unless user explicitly chose light
   const [theme, setTheme] = useState(() => {
-    const saved = localStorage.getItem('nesc-theme')
-    if (saved) return saved
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    const saved = localStorage.getItem('mnec-theme') || localStorage.getItem('nesc-theme')
+    if (saved === 'light' || saved === 'dark') return saved
+    return 'dark'
   })
 
   useEffect(() => {
-    // Apply the class to the root HTML element
     const root = window.document.documentElement
-    
     root.classList.remove('light', 'dark')
     root.classList.add(theme)
-    
-    // Save preference
-    localStorage.setItem('nesc-theme', theme)
+    localStorage.setItem('mnec-theme', theme)
   }, [theme])
 
   const toggleTheme = () => {
-    setTheme(prev => prev === 'dark' ? 'light' : 'dark')
+    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))
   }
 
   return (

@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { Calendar, ArrowRight, Search, Filter } from 'lucide-react'
 import PageHeader from '../components/PageHeader.jsx'
 import DemoBanner from '../components/DemoBanner.jsx'
+import TiltCard from '../components/TiltCard.jsx'
 import { news as dummyNews } from '../data/dummyData.js'
 import { useFirestoreCollection } from '../hooks/useFirestoreCollection.js'
 
@@ -16,16 +17,22 @@ export default function News() {
 
   const filtered = data.filter((n) => {
     const matchesTag = tag === 'All' || n.tag === tag
-    const matchesSearch = n.title.toLowerCase().includes(search.toLowerCase())
+    const q = search.trim().toLowerCase()
+    const matchesSearch =
+      !q ||
+      n.title?.toLowerCase().includes(q) ||
+      n.excerpt?.toLowerCase().includes(q) ||
+      n.body?.toLowerCase().includes(q) ||
+      n.tag?.toLowerCase().includes(q)
     return matchesTag && matchesSearch
   })
 
   return (
     <div>
       <PageHeader
-        eyebrow="Bulletin"
+        eyebrow="Bulletin & Dispatches"
         title="News & Announcements"
-        description="Updates from workshops, competitions, and the department — straight from the executive panel."
+        description="Updates from job seminars with MIST scholars, safe nuclear energy awareness campaigns, reactor physics bootcamps, and national competitions."
       />
       <DemoBanner usingFallback={usingFallback} />
 
@@ -33,14 +40,14 @@ export default function News() {
         {/* ---------------- FILTER & SEARCH BAR ---------------- */}
         <div className="flex flex-col gap-5 mb-12 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-wrap items-center gap-2">
-            <Filter size={16} className="mr-2 text-alloy-500" />
+            <Filter size={16} className="mr-2 text-alloy-400" />
             {tags.map((t) => (
               <button
                 key={t}
                 onClick={() => setTag(t)}
                 className={`px-4 py-1.5 text-[11px] font-mono uppercase tracking-wider border rounded-sm transition-all duration-300 ${
                   tag === t
-                    ? 'border-cherenkov-400 text-cherenkov-300 bg-cherenkov-400/10 shadow-glow'
+                    ? 'border-cherenkov-400 text-cherenkov-300 bg-cherenkov-400/15 shadow-glow'
                     : 'border-containment-600 text-alloy-400 hover:border-alloy-300 hover:bg-containment-700/50'
                 }`}
               >
@@ -48,14 +55,17 @@ export default function News() {
               </button>
             ))}
           </div>
-          
-          <div className="relative w-full group sm:w-72">
-            <Search className="absolute transition-colors -translate-y-1/2 left-3 top-1/2 text-alloy-500 group-focus-within:text-cherenkov-400" size={16} />
+
+          <div className="relative w-full group sm:w-80">
+            <Search
+              className="absolute transition-colors -translate-y-1/2 left-3.5 top-1/2 text-alloy-400 group-focus-within:text-cherenkov-400"
+              size={16}
+            />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search database..."
-              className="w-full py-2.5 pl-10 pr-4 text-sm transition-colors border rounded-sm bg-containment-900/50 border-containment-600 text-alloy-100 placeholder:text-alloy-600 focus:border-cherenkov-400 focus:bg-containment-800 outline-none"
+              placeholder="Search seminars, safety logs..."
+              className="w-full py-2.5 pl-10 pr-4 text-sm transition-colors border rounded-sm bg-containment-950/60 border-containment-600 text-alloy-100 placeholder:text-alloy-500 focus:border-cherenkov-400 focus:bg-containment-800 outline-none"
             />
           </div>
         </div>
@@ -68,46 +78,51 @@ export default function News() {
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {filtered.map((n, i) => (
-              <motion.article
+              <motion.div
                 key={n.id}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.45, delay: (i % 6) * 0.08 }}
-                className="relative flex flex-col overflow-hidden corner-frame panel card-hover group"
               >
-                <div className="aspect-[16/10] overflow-hidden border-b border-containment-600 relative">
-                  <div className="absolute inset-0 z-10 transition-opacity duration-300 opacity-0 pointer-events-none bg-cherenkov-400/10 group-hover:opacity-100" />
-                  <img 
-                    src={n.cover} 
-                    alt={n.title} 
-                    className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-105" 
-                  />
-                </div>
-                <div className="flex flex-col flex-1 p-6">
-                  <div className="flex items-center gap-3 mb-4">
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-uranium-400 border border-uranium-500/30 px-2 py-0.5 rounded-sm bg-uranium-500/5">
-                      {n.tag}
-                    </span>
-                    <span className="flex items-center gap-1.5 text-xs text-alloy-500">
-                      <Calendar size={12} />
-                      {new Date(n.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
-                    </span>
+                <TiltCard as="article" className="overflow-hidden corner-frame panel group">
+                  <div className="aspect-[16/10] overflow-hidden border-b border-containment-600 relative">
+                    <img
+                      src={n.cover}
+                      alt={n.title}
+                      className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
                   </div>
-                  <h3 className="mb-3 text-lg font-semibold leading-snug transition-colors text-alloy-100 group-hover:text-cherenkov-300">
-                    {n.title}
-                  </h3>
-                  <p className="mb-5 text-sm leading-relaxed text-alloy-400 line-clamp-3">
-                    {n.excerpt}
-                  </p>
-                  <Link
-                    to={`/news/${n.id}`}
-                    className="inline-flex items-center gap-1 mt-auto text-sm font-medium transition-all text-cherenkov-400 hover:gap-2 hover:text-cherenkov-300 w-fit"
-                  >
-                    Access Log <ArrowRight size={14} />
-                  </Link>
-                </div>
-              </motion.article>
+                  <div className="flex flex-col flex-1 p-6">
+                    <div className="flex items-center gap-3 mb-4">
+                      <span className="text-[10px] font-mono uppercase tracking-wider text-uranium-400 border border-uranium-500/30 px-2.5 py-0.5 rounded-sm bg-uranium-500/10">
+                        {n.tag}
+                      </span>
+                      <span className="flex items-center gap-1.5 text-xs font-mono text-alloy-400">
+                        <Calendar size={12} className="text-cherenkov-400" />
+                        {new Date(n.date).toLocaleDateString('en-GB', {
+                          day: '2-digit',
+                          month: 'short',
+                          year: 'numeric',
+                        })}
+                      </span>
+                    </div>
+                    <h3 className="mb-3 text-xl font-bold leading-snug transition-colors font-display text-alloy-100 group-hover:text-cherenkov-300">
+                      {n.title}
+                    </h3>
+                    <p className="mb-5 text-sm leading-relaxed text-alloy-300 line-clamp-3 flex-1">
+                      {n.excerpt}
+                    </p>
+                    <Link
+                      to={`/news/${n.id}`}
+                      className="inline-flex items-center gap-1.5 mt-auto text-xs font-mono uppercase tracking-wider transition-all text-cherenkov-400 hover:gap-2.5 hover:text-cherenkov-300 w-fit"
+                    >
+                      Access Full Dispatch <ArrowRight size={14} />
+                    </Link>
+                  </div>
+                </TiltCard>
+              </motion.div>
             ))}
           </div>
         )}

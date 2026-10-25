@@ -4,61 +4,65 @@
 
 @layer base {
   :root {
-    /* LIGHT MODE PALETTE */
-    --c-containment-950: 248 250 252;
-    --c-containment-900: 241 245 249;
+    /* CLEANROOM LABORATORY LIGHT MODE PALETTE (HIGH CONTRAST) */
+    --c-containment-950: 241 245 249;
+    --c-containment-900: 248 250 252;
     --c-containment-800: 255 255 255;
     --c-containment-700: 226 232 240;
     --c-containment-600: 203 213 225;
     --c-containment-500: 148 163 184;
 
-    --c-alloy-100: 15 23 42;
-    --c-alloy-200: 30 41 59;
-    --c-alloy-300: 51 65 85;
-    --c-alloy-400: 71 85 105;
+    --c-alloy-100: 9 14 26;
+    --c-alloy-200: 15 23 42;
+    --c-alloy-300: 30 41 59;
+    --c-alloy-400: 51 65 85;
     --c-alloy-500: 100 116 139;
+    --c-alloy-600: 148 163 184;
 
-    --c-cherenkov-200: 186 230 253;
+    --c-cherenkov-200: 14 116 144;
     --c-cherenkov-300: 2 132 199;
     --c-cherenkov-400: 3 105 161;
     --c-cherenkov-500: 7 89 133;
     --c-cherenkov-600: 12 74 110;
 
-    --c-uranium-300: 253 230 138;
+    --c-uranium-300: 180 83 9;
     --c-uranium-400: 217 119 6;
     --c-uranium-500: 180 83 9;
     --c-uranium-600: 146 64 14;
 
+    --c-safety: 5 150 105;
     --c-hazard: 220 38 38;
   }
 
   .dark {
-    /* ORIGINAL DARK MODE PALETTE */
-    --c-containment-950: 7 10 15;
-    --c-containment-900: 10 14 20;
-    --c-containment-800: 17 24 38;
-    --c-containment-700: 24 34 49;
-    --c-containment-600: 34 48 63;
-    --c-containment-500: 51 66 85;
+    /* HYPER-REALISTIC DEEP REACTOR CONTAINMENT DARK PALETTE */
+    --c-containment-950: 4 7 13;
+    --c-containment-900: 7 11 20;
+    --c-containment-800: 13 20 34;
+    --c-containment-700: 20 30 48;
+    --c-containment-600: 31 45 68;
+    --c-containment-500: 48 67 96;
 
-    --c-alloy-100: 237 242 246;
-    --c-alloy-200: 214 222 230;
-    --c-alloy-300: 174 186 199;
-    --c-alloy-400: 139 155 174;
-    --c-alloy-500: 100 112 130;
+    --c-alloy-100: 241 247 255;
+    --c-alloy-200: 216 228 242;
+    --c-alloy-300: 176 194 214;
+    --c-alloy-400: 136 156 181;
+    --c-alloy-500: 94 113 138;
+    --c-alloy-600: 66 82 105;
 
-    --c-cherenkov-200: 190 239 251;
-    --c-cherenkov-300: 143 224 245;
-    --c-cherenkov-400: 94 200 232;
-    --c-cherenkov-500: 56 170 209;
-    --c-cherenkov-600: 38 135 172;
+    --c-cherenkov-200: 186 244 255;
+    --c-cherenkov-300: 103 232 249;
+    --c-cherenkov-400: 34 211 238;
+    --c-cherenkov-500: 6 182 212;
+    --c-cherenkov-600: 8 145 178;
 
-    --c-uranium-300: 247 212 136;
-    --c-uranium-400: 242 179 61;
-    --c-uranium-500: 222 154 34;
-    --c-uranium-600: 184 122 21;
+    --c-uranium-300: 253 224 71;
+    --c-uranium-400: 251 191 36;
+    --c-uranium-500: 245 158 11;
+    --c-uranium-600: 217 119 6;
 
-    --c-hazard: 232 84 42;
+    --c-safety: 16 185 129;
+    --c-hazard: 244 63 94;
   }
 
   * {
@@ -68,13 +72,15 @@
     scroll-behavior: smooth;
   }
   body {
-    @apply font-sans antialiased transition-colors duration-300 bg-containment-900 text-alloy-100;
+    @apply font-sans antialiased transition-colors duration-300 bg-containment-900 text-alloy-100 overflow-x-hidden;
     background-image:
-      radial-gradient(circle at 15% 0%, rgb(var(--c-cherenkov-400) / 0.08), transparent 45%),
-      radial-gradient(circle at 85% 20%, rgb(var(--c-uranium-400) / 0.06), transparent 40%);
+      radial-gradient(ellipse 80% 50% at 15% -5%, rgb(var(--c-cherenkov-400) / 0.14), transparent 55%),
+      radial-gradient(ellipse 60% 45% at 85% 15%, rgb(var(--c-uranium-400) / 0.08), transparent 50%),
+      radial-gradient(ellipse 70% 50% at 50% 100%, rgb(var(--c-cherenkov-500) / 0.07), transparent 60%);
+    background-attachment: fixed;
   }
   ::selection {
-    @apply text-white bg-cherenkov-500/40;
+    @apply text-white bg-cherenkov-500/50;
   }
   :focus-visible {
     outline: 2px solid rgb(var(--c-cherenkov-400));
@@ -94,7 +100,7 @@
     border-radius: 4px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background-color: rgb(var(--c-cherenkov-500));
+    background-color: rgb(var(--c-cherenkov-400));
   }
 }
 
@@ -106,20 +112,26 @@
     @apply px-5 mx-auto max-w-7xl sm:px-8 lg:px-10;
   }
   .btn-primary {
-    @apply inline-flex items-center gap-2 rounded-sm bg-cherenkov-400 text-containment-950 font-semibold px-6 py-3 text-sm tracking-wide transition-all hover:bg-cherenkov-300 hover:shadow-glow active:scale-[0.98];
+    @apply relative overflow-hidden inline-flex items-center gap-2 rounded-sm bg-gradient-to-r from-cherenkov-400 to-cherenkov-300 text-slate-950 font-bold px-6 py-3 text-sm tracking-wide transition-all duration-300 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98];
   }
   .btn-secondary {
-    @apply inline-flex items-center gap-2 rounded-sm border border-alloy-500/50 text-alloy-100 font-semibold px-6 py-3 text-sm tracking-wide transition-all hover:border-cherenkov-400 hover:text-cherenkov-400 active:scale-[0.98];
+    @apply relative inline-flex items-center gap-2 rounded-sm border border-containment-500 bg-containment-800/60 backdrop-blur-md text-alloy-100 font-semibold px-6 py-3 text-sm tracking-wide transition-all duration-300 hover:border-cherenkov-400 hover:text-cherenkov-300 hover:bg-cherenkov-400/10 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98];
   }
   .btn-amber {
-    @apply inline-flex items-center gap-2 rounded-sm bg-uranium-400 text-containment-950 font-semibold px-6 py-3 text-sm tracking-wide transition-all hover:bg-uranium-300 hover:shadow-glow-amber active:scale-[0.98];
+    @apply inline-flex items-center gap-2 rounded-sm bg-gradient-to-r from-uranium-400 to-uranium-300 text-slate-950 font-bold px-6 py-3 text-sm tracking-wide transition-all duration-300 hover:shadow-glow-amber hover:-translate-y-0.5 active:scale-[0.98];
   }
   .panel {
-    @apply border rounded-sm bg-containment-800/70 border-containment-600 backdrop-blur-sm;
+    @apply border rounded-sm bg-containment-800/75 border-containment-600/90 backdrop-blur-md shadow-3d;
+    background-image: linear-gradient(
+      145deg,
+      rgb(var(--c-cherenkov-400) / 0.04) 0%,
+      transparent 45%,
+      rgb(var(--c-containment-950) / 0.35) 100%
+    );
   }
-  
+
   .card-hover {
-    @apply transition-all duration-300 hover:border-cherenkov-400/50 hover:-translate-y-1 hover:bg-containment-800/80;
+    @apply transition-all duration-300 hover:border-cherenkov-400/60 hover:-translate-y-1.5 hover:shadow-3d-hover hover:bg-containment-800/90;
   }
 
   .corner-frame {
@@ -129,20 +141,34 @@
   .corner-frame::after {
     content: '';
     position: absolute;
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
     border-color: rgb(var(--c-cherenkov-400));
-    opacity: 0.7;
-    transition: border-color 0.3s ease;
+    opacity: 0.75;
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+    z-index: 20;
   }
   .corner-frame::before {
-    top: -1px; left: -1px;
-    border-top: 2px solid; border-left: 2px solid;
+    top: -1px;
+    left: -1px;
+    border-top: 2px solid;
+    border-left: 2px solid;
   }
   .corner-frame::after {
-    bottom: -1px; right: -1px;
-    border-bottom: 2px solid; border-right: 2px solid;
+    bottom: -1px;
+    right: -1px;
+    border-bottom: 2px solid;
+    border-right: 2px solid;
   }
+  .corner-frame:hover::before,
+  .corner-frame:hover::after {
+    width: 24px;
+    height: 24px;
+    opacity: 1;
+    filter: drop-shadow(0 0 6px rgb(var(--c-cherenkov-400) / 0.8));
+  }
+
   .data-label {
     @apply font-mono text-[11px] uppercase tracking-wider text-alloy-400;
   }
@@ -152,6 +178,23 @@
   }
   .divider-dashed {
     @apply border-t border-dashed border-containment-500;
+  }
+
+  /* 3D PERSPECTIVE & HOLOGRAPHIC UTILITIES */
+  .perspective-1000 {
+    perspective: 1200px;
+  }
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+  .translate-z-10 {
+    transform: translateZ(16px);
+  }
+  .translate-z-20 {
+    transform: translateZ(32px);
+  }
+  .translate-z-30 {
+    transform: translateZ(48px);
   }
 
   /* SKELETON LOADER UTILITY */

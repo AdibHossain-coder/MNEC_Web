@@ -17,7 +17,9 @@ export default function AdminPanel() {
         <button
           onClick={() => setTab('executives')}
           className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
-            tab === 'executives' ? 'border-cherenkov-400 text-cherenkov-300' : 'border-transparent text-alloy-400'
+            tab === 'executives'
+              ? 'border-cherenkov-400 text-cherenkov-300'
+              : 'border-transparent text-alloy-400'
           }`}
         >
           Executive Committee
@@ -25,7 +27,9 @@ export default function AdminPanel() {
         <button
           onClick={() => setTab('advisors')}
           className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
-            tab === 'advisors' ? 'border-cherenkov-400 text-cherenkov-300' : 'border-transparent text-alloy-400'
+            tab === 'advisors'
+              ? 'border-cherenkov-400 text-cherenkov-300'
+              : 'border-transparent text-alloy-400'
           }`}
         >
           Faculty Advisors
@@ -34,6 +38,7 @@ export default function AdminPanel() {
 
       {tab === 'executives' ? (
         <AdminCollectionManager
+          key="executives"
           title="Executive Committee"
           description="Shown on the Panel page."
           collectionName="panel_executives"
@@ -42,6 +47,7 @@ export default function AdminPanel() {
         />
       ) : (
         <AdminCollectionManager
+          key="advisors"
           title="Faculty Advisors"
           description="Shown on the Panel page."
           collectionName="panel_advisors"
