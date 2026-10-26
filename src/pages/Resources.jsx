@@ -41,7 +41,7 @@ export default function Resources() {
 
   function handleResourceClick(e, r) {
     if (r.link && r.link.startsWith('http')) {
-      return // Allow normal external link navigation
+      return
     }
     e.preventDefault()
     setSelectedResource(r)
@@ -95,19 +95,29 @@ export default function Resources() {
         {/* ---------------- FILTER ---------------- */}
         <div className="flex flex-wrap items-center gap-2 mb-12">
           <Filter size={16} className="mr-2 text-alloy-400" />
-          {categories.map((c) => (
-            <button
-              key={c}
-              onClick={() => setCategory(c)}
-              className={`px-4 py-1.5 text-[11px] font-mono uppercase tracking-wider border rounded-sm transition-all duration-300 ${
-                category === c
-                  ? 'border-cherenkov-400 text-cherenkov-300 bg-cherenkov-400/15 shadow-glow'
-                  : 'border-containment-600 text-alloy-400 hover:border-alloy-300 hover:bg-containment-700/50'
-              }`}
-            >
-              {c}
-            </button>
-          ))}
+          {categories.map((c) => {
+            const active = category === c
+            return (
+              <button
+                key={c}
+                onClick={() => setCategory(c)}
+                className={`relative px-4 py-1.5 text-[11px] font-mono uppercase tracking-wider border rounded-sm transition-colors duration-300 ${
+                  active
+                    ? 'border-cherenkov-400/60 text-cherenkov-300'
+                    : 'border-containment-600 text-alloy-400 hover:border-alloy-300 hover:text-alloy-200'
+                }`}
+              >
+                {active && (
+                  <motion.span
+                    layoutId="resourceFilterActivePill"
+                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                    className="absolute inset-0 rounded-sm bg-cherenkov-400/15 border border-cherenkov-400 shadow-glow"
+                  />
+                )}
+                <span className="relative z-10">{c}</span>
+              </button>
+            )
+          })}
         </div>
 
         {/* ---------------- RESOURCE GRID ---------------- */}
@@ -116,76 +126,85 @@ export default function Resources() {
             <p className="font-mono text-sm text-alloy-500">NO RESOURCES FOUND.</p>
           </div>
         ) : (
-          <div className="space-y-12">
-            {Object.entries(groupedResources).map(([catName, items]) => (
-              <div key={catName}>
-                <div className="flex items-center gap-3 mb-6">
-                  <FolderArchive size={18} className="text-uranium-400" />
-                  <h2 className="font-mono text-sm tracking-widest uppercase text-alloy-200">
-                    {catName}
-                  </h2>
-                  <div className="flex-1 h-px border-t border-dashed border-containment-600" />
-                </div>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={category}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.25 }}
+              className="space-y-12"
+            >
+              {Object.entries(groupedResources).map(([catName, items]) => (
+                <div key={catName}>
+                  <div className="flex items-center gap-3 mb-6">
+                    <FolderArchive size={18} className="text-uranium-400" />
+                    <h2 className="font-mono text-sm tracking-widest uppercase text-alloy-200">
+                      {catName}
+                    </h2>
+                    <div className="flex-1 h-px border-t border-dashed border-containment-600" />
+                  </div>
 
-                <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-                  {items.map((r, i) => {
-                    const Icon = typeIcon[r.type] || FileText
-                    const isExternal = r.link && r.link.startsWith('http')
-                    return (
-                      <motion.div
-                        key={r.id}
-                        initial={{ opacity: 0, y: 12 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.4, delay: (i % 8) * 0.05 }}
-                      >
-                        <TiltCard className="corner-frame panel group">
-                          <a
-                            href={isExternal ? r.link : `#${r.id}`}
-                            target={isExternal ? '_blank' : undefined}
-                            rel={isExternal ? 'noopener noreferrer' : undefined}
-                            onClick={(e) => handleResourceClick(e, r)}
-                            className="flex flex-col justify-between p-6 h-full"
-                          >
-                            <div className="flex items-start gap-4">
-                              <div className="flex items-center justify-center transition-colors border rounded-sm shrink-0 h-12 w-12 border-containment-600 bg-containment-950/80 text-cherenkov-400 group-hover:border-cherenkov-400/60 group-hover:bg-cherenkov-400/10 group-hover:shadow-glow">
-                                <Icon size={22} strokeWidth={1.5} />
+                  <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+                    {items.map((r, i) => {
+                      const Icon = typeIcon[r.type] || FileText
+                      const isExternal = r.link && r.link.startsWith('http')
+                      return (
+                        <motion.div
+                          key={r.id}
+                          initial={{ opacity: 0, y: 12 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.4, delay: (i % 8) * 0.05 }}
+                        >
+                          <TiltCard className="corner-frame panel group">
+                            <a
+                              href={isExternal ? r.link : `#${r.id}`}
+                              target={isExternal ? '_blank' : undefined}
+                              rel={isExternal ? 'noopener noreferrer' : undefined}
+                              onClick={(e) => handleResourceClick(e, r)}
+                              className="flex flex-col justify-between p-6 h-full"
+                            >
+                              <div className="flex items-start gap-4">
+                                <div className="flex items-center justify-center transition-colors border rounded-sm shrink-0 h-12 w-12 border-containment-600 bg-containment-950/80 text-cherenkov-400 group-hover:border-cherenkov-400/60 group-hover:bg-cherenkov-400/10 group-hover:shadow-glow">
+                                  <Icon size={22} strokeWidth={1.5} />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <p className="font-semibold leading-snug transition-colors text-alloy-100 group-hover:text-cherenkov-300">
+                                    {r.title}
+                                  </p>
+                                  <p className="mt-1.5 font-mono text-[10px] tracking-wider uppercase text-uranium-400">
+                                    {r.type} · {r.size}
+                                  </p>
+                                </div>
                               </div>
-                              <div className="flex-1 min-w-0">
-                                <p className="font-semibold leading-snug transition-colors text-alloy-100 group-hover:text-cherenkov-300">
-                                  {r.title}
+
+                              {r.summary && (
+                                <p className="mt-4 text-xs leading-relaxed text-alloy-400 line-clamp-2">
+                                  {r.summary}
                                 </p>
-                                <p className="mt-1.5 font-mono text-[10px] tracking-wider uppercase text-uranium-400">
-                                  {r.type} · {r.size}
-                                </p>
+                              )}
+
+                              <div className="flex items-center justify-between pt-4 mt-4 border-t border-containment-600/80 font-mono text-[10px] uppercase tracking-wider text-alloy-400 group-hover:text-cherenkov-300">
+                                <span className="flex items-center gap-1.5">
+                                  {isExternal ? <ExternalLink size={13} /> : <Eye size={13} />}
+                                  {isExternal ? 'Open External File' : 'Inspect Dossier'}
+                                </span>
+                                <Download
+                                  size={15}
+                                  className="transition-transform group-hover:translate-y-0.5 text-cherenkov-400"
+                                />
                               </div>
-                            </div>
-
-                            {r.summary && (
-                              <p className="mt-4 text-xs leading-relaxed text-alloy-400 line-clamp-2">
-                                {r.summary}
-                              </p>
-                            )}
-
-                            <div className="flex items-center justify-between pt-4 mt-4 border-t border-containment-600/80 font-mono text-[10px] uppercase tracking-wider text-alloy-400 group-hover:text-cherenkov-300">
-                              <span className="flex items-center gap-1.5">
-                                {isExternal ? <ExternalLink size={13} /> : <Eye size={13} />}
-                                {isExternal ? 'Open External File' : 'Inspect Dossier'}
-                              </span>
-                              <Download
-                                size={15}
-                                className="transition-transform group-hover:translate-y-0.5 text-cherenkov-400"
-                              />
-                            </div>
-                          </a>
-                        </TiltCard>
-                      </motion.div>
-                    )
-                  })}
+                            </a>
+                          </TiltCard>
+                        </motion.div>
+                      )
+                    })}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </motion.div>
+          </AnimatePresence>
         )}
       </section>
 

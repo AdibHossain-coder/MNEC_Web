@@ -11,6 +11,11 @@ function GalleryImage({ item, onClick }) {
 
   return (
     <motion.button
+      layout
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.92 }}
+      transition={{ duration: 0.3 }}
       whileHover={{ y: -4, scale: 1.01 }}
       onClick={() => onClick(item)}
       className="relative block w-full overflow-hidden transition-all duration-300 break-inside-avoid corner-frame panel group hover:border-cherenkov-400/60 hover:shadow-3d-hover"
@@ -63,26 +68,38 @@ export default function Gallery() {
         {/* ---------------- FILTER ---------------- */}
         <div className="flex flex-wrap items-center gap-2 mb-12">
           <Filter size={16} className="mr-2 text-alloy-400" />
-          {albums.map((a) => (
-            <button
-              key={a}
-              onClick={() => setAlbum(a)}
-              className={`px-4 py-1.5 text-[11px] font-mono uppercase tracking-wider border rounded-sm transition-all duration-300 ${
-                album === a
-                  ? 'border-cherenkov-400 text-cherenkov-300 bg-cherenkov-400/15 shadow-glow'
-                  : 'border-containment-600 text-alloy-400 hover:border-alloy-300 hover:bg-containment-700/50'
-              }`}
-            >
-              {a}
-            </button>
-          ))}
+          {albums.map((a) => {
+            const isSelected = album === a
+            return (
+              <button
+                key={a}
+                onClick={() => setAlbum(a)}
+                className={`relative px-4 py-1.5 text-[11px] font-mono uppercase tracking-wider border rounded-sm transition-colors duration-300 ${
+                  isSelected
+                    ? 'border-cherenkov-400/60 text-cherenkov-300'
+                    : 'border-containment-600 text-alloy-400 hover:border-alloy-300 hover:text-alloy-200'
+                }`}
+              >
+                {isSelected && (
+                  <motion.span
+                    layoutId="galleryFilterActivePill"
+                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                    className="absolute inset-0 rounded-sm bg-cherenkov-400/15 border border-cherenkov-400 shadow-glow"
+                  />
+                )}
+                <span className="relative z-10">{a}</span>
+              </button>
+            )
+          })}
         </div>
 
         {/* ---------------- MASONRY GRID ---------------- */}
         <div className="gap-4 space-y-4 columns-1 sm:columns-2 md:columns-3 lg:columns-4">
-          {filtered.map((g) => (
-            <GalleryImage key={g.id} item={g} onClick={setActive} />
-          ))}
+          <AnimatePresence mode="popLayout">
+            {filtered.map((g) => (
+              <GalleryImage key={g.id} item={g} onClick={setActive} />
+            ))}
+          </AnimatePresence>
         </div>
       </section>
 

@@ -1,26 +1,25 @@
 import { Suspense, lazy } from 'react'
 import { Routes, Route } from 'react-router-dom'
-import { motion } from 'framer-motion'
 
 import Layout from './components/Layout.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
-import AdminLayout from './pages/admin/AdminLayout.jsx'
 import Loader from './components/Loader.jsx'
 
-// Lazy load public pages
-const Home = lazy(() => import('./pages/Home.jsx'))
-const News = lazy(() => import('./pages/News.jsx'))
-const NewsDetail = lazy(() => import('./pages/NewsDetail.jsx'))
-const Panel = lazy(() => import('./pages/Panel.jsx'))
-const Alumni = lazy(() => import('./pages/Alumni.jsx'))
-const Activities = lazy(() => import('./pages/Activities.jsx'))
-const Resources = lazy(() => import('./pages/Resources.jsx'))
-const Gallery = lazy(() => import('./pages/Gallery.jsx'))
-const About = lazy(() => import('./pages/About.jsx'))
-const Login = lazy(() => import('./pages/Login.jsx'))
-const NotFound = lazy(() => import('./pages/NotFound.jsx'))
+// Eagerly load public pages (~18 KB gzip total) for instant 0ms tab transitions
+import Home from './pages/Home.jsx'
+import News from './pages/News.jsx'
+import NewsDetail from './pages/NewsDetail.jsx'
+import Panel from './pages/Panel.jsx'
+import Alumni from './pages/Alumni.jsx'
+import Activities from './pages/Activities.jsx'
+import Resources from './pages/Resources.jsx'
+import Gallery from './pages/Gallery.jsx'
+import About from './pages/About.jsx'
+import Login from './pages/Login.jsx'
+import NotFound from './pages/NotFound.jsx'
 
-// Lazy load admin pages
+// Lazy load admin CMS pages
+const AdminLayout = lazy(() => import('./pages/admin/AdminLayout.jsx'))
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard.jsx'))
 const AdminNews = lazy(() => import('./pages/admin/AdminNews.jsx'))
 const AdminPanel = lazy(() => import('./pages/admin/AdminPanel.jsx'))
@@ -30,54 +29,42 @@ const AdminResources = lazy(() => import('./pages/admin/AdminResources.jsx'))
 const AdminGallery = lazy(() => import('./pages/admin/AdminGallery.jsx'))
 const AdminSettings = lazy(() => import('./pages/admin/AdminSettings.jsx'))
 
-// Reusable wrapper for smooth page entrances
-const PageTransition = ({ children }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 15 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.4, ease: 'easeOut' }}
-    className="flex flex-col flex-1"
-  >
-    {children}
-  </motion.div>
-)
-
 export default function App() {
   return (
-    <Suspense fallback={<Loader label="Initializing Module" />}>
-      <Routes>
-        <Route element={<Layout />}>
-          <Route path="/" element={<PageTransition><Home /></PageTransition>} />
-          <Route path="/news" element={<PageTransition><News /></PageTransition>} />
-          <Route path="/news/:id" element={<PageTransition><NewsDetail /></PageTransition>} />
-          <Route path="/panel" element={<PageTransition><Panel /></PageTransition>} />
-          <Route path="/alumni" element={<PageTransition><Alumni /></PageTransition>} />
-          <Route path="/activities" element={<PageTransition><Activities /></PageTransition>} />
-          <Route path="/resources" element={<PageTransition><Resources /></PageTransition>} />
-          <Route path="/gallery" element={<PageTransition><Gallery /></PageTransition>} />
-          <Route path="/about" element={<PageTransition><About /></PageTransition>} />
-          <Route path="/login" element={<PageTransition><Login /></PageTransition>} />
-          <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
-        </Route>
+    <Routes>
+      <Route element={<Layout />}>
+        <Route path="/" element={<Home />} />
+        <Route path="/news" element={<News />} />
+        <Route path="/news/:id" element={<NewsDetail />} />
+        <Route path="/panel" element={<Panel />} />
+        <Route path="/alumni" element={<Alumni />} />
+        <Route path="/activities" element={<Activities />} />
+        <Route path="/resources" element={<Resources />} />
+        <Route path="/gallery" element={<Gallery />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="*" element={<NotFound />} />
+      </Route>
 
-        <Route
-          path="/admin"
-          element={
-            <ProtectedRoute>
+      <Route
+        path="/admin"
+        element={
+          <ProtectedRoute>
+            <Suspense fallback={<Loader label="Initializing CMS" />}>
               <AdminLayout />
-            </ProtectedRoute>
-          }
-        >
-          <Route index element={<PageTransition><AdminDashboard /></PageTransition>} />
-          <Route path="news" element={<PageTransition><AdminNews /></PageTransition>} />
-          <Route path="panel" element={<PageTransition><AdminPanel /></PageTransition>} />
-          <Route path="alumni" element={<PageTransition><AdminAlumni /></PageTransition>} />
-          <Route path="activities" element={<PageTransition><AdminActivities /></PageTransition>} />
-          <Route path="resources" element={<PageTransition><AdminResources /></PageTransition>} />
-          <Route path="gallery" element={<PageTransition><AdminGallery /></PageTransition>} />
-          <Route path="settings" element={<PageTransition><AdminSettings /></PageTransition>} />
-        </Route>
-      </Routes>
-    </Suspense>
+            </Suspense>
+          </ProtectedRoute>
+        }
+      >
+        <Route index element={<AdminDashboard />} />
+        <Route path="news" element={<AdminNews />} />
+        <Route path="panel" element={<AdminPanel />} />
+        <Route path="alumni" element={<AdminAlumni />} />
+        <Route path="activities" element={<AdminActivities />} />
+        <Route path="resources" element={<AdminResources />} />
+        <Route path="gallery" element={<AdminGallery />} />
+        <Route path="settings" element={<AdminSettings />} />
+      </Route>
+    </Routes>
   )
 }
